@@ -3,6 +3,8 @@ import {ConfigModule} from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
+import { User } from './users/entities/user.entity';
+import { Rol } from './roles/entities/role.entity';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { RolesModule } from './roles/roles.module';
         encrypt: false,
         trustServerCertificate: true,
       },
+      entities: [User, Rol]
     }),
 
     UsersModule,
