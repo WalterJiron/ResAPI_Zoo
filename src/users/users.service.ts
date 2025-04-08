@@ -1,18 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+//import * as bcryptjs from 'bcryptjs';   -------- POSIBLE IMPLEMENTACION
+
 @Injectable()
 export class UsersService {
+  // Inyectamos la entidad de User
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) { }
   
+  // Creamos un nuevo usuario
   async create(createUserDto: CreateUserDto): Promise<{ message: string }> {
+    // Usamos el proc para crear el usuario
     const result = await this.userRepository.query(
         `DECLARE @Mensaje VARCHAR(100)
         EXEC ProcInsertUser 
@@ -25,33 +30,51 @@ export class UsersService {
         [
           createUserDto.nameUser,
           createUserDto.email,
-          createUserDto.password, // La clave se ecripta en el proc
+          createUserDto.password,  // La clave se ecripta en el proc
           createUserDto.rol,
         ],
     );
 
+    // Miramos si el mensaje contiene la palabra correctamente si es asi devolvemos el mensaje
     if (result[0].message.includes('correctamente')) {
       return { message: result[0].message };
     } else {
-      throw new NotFoundException(result[0].message);
+      throw new BadRequestException(result[0].message);
     }
   }
 
+  // Listamos todos los usuarios
   async findAll() {
-    return await this.userRepository.find()
+    // Buscamos todos los usuarios
+    const users = await this.userRepository.find();
+
+    // Miramos si hay usuarios
+    if (!users.length) {
+      throw new NotFoundException('No existen usuarios');
+    }
+
+    return users;
   }
 
+  // Listamos un usuario por id
   async findOne(id: string) {
-    return await this.userRepository.findOne({
-      where: {
-        codigoUser: id,
-        estadoUser: true
-      },
+    // Buscamos el usuario por id
+    const rol = await this.userRepository.findOne({
+      where: { codigoUser: id, estadoUser: true },
       relations: ['rol']
     });
+
+    // Miramos si existe el usuario
+    if (!rol) {
+      throw new NotFoundException(`El usuario con id ${id} no existe o esta inactivo`);
+    }
+
+    return rol;
   }
 
+  // Hacemos un update al usuario
   async update(id: string, updateUserDto: UpdateUserDto): Promise<{ message: string }> {
+    // Usamos el proc para actualizar el usuario
     const result = await this.userRepository.query(`
       DECLARE @Mensaje VARCHAR(100)
       EXEC ProcUpdateUser
@@ -70,14 +93,17 @@ export class UsersService {
       updateUserDto.rol,
     ]);
 
+    // Miramos si el mensaje contiene la palabra correctamente si es asi devolvemos el mensaje
     if (result[0].message.includes('correctamente')) {
       return { message: result[0].message };
     } else {
-      throw new NotFoundException(result[0].message);
+      throw new BadRequestException(result[0].message);
     }
   }
 
+  // Hacemos un delete al usuario
   async remove(id: string): Promise<{ message: string }> {
+    // Usamos el proc para eliminar el usuario
     const result = await this.userRepository.query(`
           DECLARE @Mensaje VARCHAR(100)
           EXEC ProcDeleteUser
@@ -89,7 +115,7 @@ export class UsersService {
     if (result[0].message.includes('correctamente')) {
       return { message: result[0].message };
     } else {
-      throw new NotFoundException(result[0].message);
+      throw new BadRequestException(result[0].message);
     }
   }
 
