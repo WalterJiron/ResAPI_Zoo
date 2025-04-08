@@ -1,16 +1,26 @@
 import { Module } from '@nestjs/common';
-import {ConfigModule} from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { User } from './users/entities/user.entity';
 import { Rol } from './roles/entities/role.entity';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+
+    ThrottlerModule.forRoot({
+      throttlers :[{
+        name: 'login',
+        ttl: 600,  // 10 minutos 
+        limit: 5,   // 5 intentos máximos
+      }]
     }),
 
     TypeOrmModule.forRoot({
@@ -35,5 +45,12 @@ import { AuthModule } from './auth/auth.module';
 
     AuthModule
   ],
+
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard, // Aplica el guard globalmente
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule { }
