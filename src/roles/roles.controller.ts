@@ -3,7 +3,9 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import {AuthGuard} from 'src/auth/guard/auth.guard'
+import { Throttle } from '@nestjs/throttler';
 
+@Throttle({ api: { ttl: 60000, limit: 100, blockDuration: 60000, } })
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}

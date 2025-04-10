@@ -11,16 +11,29 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
+    // Para el manejo de peticiones
+    ThrottlerModule.forRoot({
+      throttlers: [
+        // Para la proteccion de las rutas
+        {
+          name: 'api',
+          ttl: 60000,  // 1 minuto (en milisegundos)
+          limit: 100,  // 100 peticiones por minuto
+          blockDuration: 60000,
+        },
+        // Configuración especifica para login
+        {
+          name: 'login',
+          ttl: 60000,     // 1 minuto
+          limit: 5,       // Solo 5 intentos cada 10 minutos
+          blockDuration: 600000,
+        }
+      ],
+      errorMessage: 'Demasiadas solicitudes. Por favor intente nuevamente más tarde.',
     }),
 
-    ThrottlerModule.forRoot({
-      throttlers :[{
-        name: 'login',
-        ttl: 600,  // 10 minutos 
-        limit: 5,   // 5 intentos máximos
-      }]
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
 
     TypeOrmModule.forRoot({

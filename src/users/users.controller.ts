@@ -3,7 +3,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Throttle } from '@nestjs/throttler';
 
+@Throttle({ api: { ttl: 60000, limit: 100, blockDuration: 60000, } })
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
