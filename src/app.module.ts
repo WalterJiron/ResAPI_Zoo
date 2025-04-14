@@ -6,36 +6,49 @@ import { RolesModule } from './roles/roles.module';
 import { User } from './users/entities/user.entity';
 import { Rol } from './roles/entities/role.entity';
 import { AuthModule } from './auth/auth.module';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ContinentesModule } from './continentes/continentes.module';
+import { EspecieModule } from './especie/especie.module';
+import { ZonasModule } from './zonas/zonas.module';
+import { CargosModule } from './cargos/cargos.module';
+import { EmpleadosModule } from './empleados/empleados.module';
+import { ThrottlerBehindProxyGuard } from './guard/throttler-behind-proxy.guard';
+import { HabitatsModule } from './habitats/habitats.module';
+import { ItinerariosModule } from './itinerarios/itinerarios.module';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 @Module({
   imports: [
-    // Para el manejo de peticiones
+
+    // Para la seguridad de las peticiones
     ThrottlerModule.forRoot({
       throttlers: [
-        // Para la proteccion de las rutas
+
+        // Configuración general para otras rutas (100 peticiones/minuto)
         {
           name: 'api',
-          ttl: 60000,  // 1 minuto (en milisegundos)
-          limit: 100,  // 100 peticiones por minuto
-          blockDuration: 60000,
+          limit: 100,
+          ttl: 60000,
+          blockDuration: 60000, // Bloqueo por 1 minuto
         },
-        // Configuración especifica para login
+        // Configuración específica para login (5 intentos cada 10 minutos)
         {
-          name: 'login',
-          ttl: 60000,     // 1 minuto
-          limit: 5,       // Solo 5 intentos cada 10 minutos
-          blockDuration: 600000,
-        }
+          ttl: 60000,    // 1 minuto (en ms)
+          limit: 5,      // 5 intentos por minuto
+          blockDuration: 600000, // Bloqueo por 10 minutos si se excede
+        },
+
       ],
-      errorMessage: 'Demasiadas solicitudes. Por favor intente nuevamente más tarde.',
+      errorMessage: 'Demasiadas solicitudes. Por favor intente nuevamente mas tarde.',
+
     }),
 
     ConfigModule.forRoot({
       isGlobal: true,
     }),
 
+    // La conexion a la base dedatos 
     TypeOrmModule.forRoot({
       type: 'mssql',
       host: process.env.DB_HOST,
@@ -56,13 +69,31 @@ import { APP_GUARD } from '@nestjs/core';
 
     RolesModule,
 
-    AuthModule
+    AuthModule,
+
+    ContinentesModule,
+
+    EspecieModule,
+
+    ZonasModule,
+
+    CargosModule,
+
+    EmpleadosModule,
+
+    HabitatsModule,
+
+    ItinerariosModule
   ],
 
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard, // Aplica el guard globalmente
+      useClass: AuthGuard,  // Guard de autenticación global
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerBehindProxyGuard,
     },
   ],
 })

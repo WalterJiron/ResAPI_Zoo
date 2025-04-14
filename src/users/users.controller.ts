@@ -1,42 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
-@Throttle({ api: { ttl: 60000, limit: 100, blockDuration: 60000, } })
+@SkipThrottle()
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
+  constructor(private readonly usersService: UsersService) { }
+  
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @Post()
-  @UseGuards(AuthGuard)
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
+  @Throttle({ api: { limit: 100, ttl: 60000 } })     
   @Get()
-  @UseGuards(AuthGuard)
   async findAll() {
-    return await this.usersService.findAll();
+    return this.usersService.findAll();
   }
 
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @Get(':id')
-  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(id);
+    return this.usersService.findOne(id);
   }
 
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @Patch(':id')
-  @UseGuards(AuthGuard)
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @Delete(':id')
-  @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
-    return await this.usersService.remove(id);
+    return this.usersService.remove(id);
+  }
+
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Put('/activate/:id')  
+  async activate(@Param('id') id: string) {
+    return this.usersService.restore(id);
   }
 }

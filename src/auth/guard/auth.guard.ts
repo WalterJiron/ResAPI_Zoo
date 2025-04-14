@@ -7,9 +7,9 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async canActivate( context: ExecutionContext ): Promise<boolean>{
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     // captura el contexto de la peticion
     // el contexto es el objeto que contiene la peticion, la respuesta y el siguiente middleware
     const request = context.switchToHttp().getRequest();
@@ -27,12 +27,12 @@ export class AuthGuard implements CanActivate {
           secret: jwtConstants.secret
         }
       );
-      
+
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();
     }
-    
+
     return true;
   }
 

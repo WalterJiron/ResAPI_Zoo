@@ -1,42 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import {AuthGuard} from 'src/auth/guard/auth.guard'
+import { AuthGuard } from 'src/auth/guard/auth.guard'
 import { Throttle } from '@nestjs/throttler';
 
-@Throttle({ api: { ttl: 60000, limit: 100, blockDuration: 60000, } })
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  constructor(private readonly rolesService: RolesService) { }
 
-  @Post()
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @UseGuards(AuthGuard)
+  @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
     return await this.rolesService.create(createRoleDto);
   }
 
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @UseGuards(AuthGuard)
   @Get()
-  @UseGuards(AuthGuard) 
   async findAll() {
     return await this.rolesService.findAll();
   }
 
-  @Get(':id')
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @UseGuards(AuthGuard)
+  @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.rolesService.findOne(id);
   }
 
-  @Patch(':id')
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @UseGuards(AuthGuard)
+  @Patch(':id')
   async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return await this.rolesService.update(id, updateRoleDto);
   }
 
-  @Delete(':id')
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
   @UseGuards(AuthGuard)
+  @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.rolesService.remove(id);
+  }
+
+  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @UseGuards(AuthGuard)
+  @Put('/Activate/:id')
+  async restore(@Param('id') id: string) {
+    return await this.rolesService.restore(id);
   }
 }

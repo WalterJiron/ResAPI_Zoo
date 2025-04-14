@@ -14,12 +14,12 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) { }
-  
+
   // Creamos un nuevo usuario
   async create(createUserDto: CreateUserDto): Promise<{ message: string }> {
     // Usamos el proc para crear el usuario
     const result = await this.userRepository.query(
-        `DECLARE @Mensaje VARCHAR(100)
+      `DECLARE @Mensaje AS VARCHAR(100)
         EXEC ProcInsertUser 
           @NameUser = @0, 
           @Email = @1, 
@@ -27,20 +27,20 @@ export class UsersService {
           @Rol = @3,
           @Mensaje = @Mensaje OUTPUT
         SELECT @Mensaje AS message`,
-        [
-          createUserDto.nameUser,
-          createUserDto.email,
-          createUserDto.password,  // La clave se ecripta en el proc
-          createUserDto.rol,
-        ],
+      [
+        createUserDto.nameUser,
+        createUserDto.email,
+        createUserDto.password,  // La clave se ecripta en el proc
+        createUserDto.rol,
+      ],
     );
 
     // Miramos si el mensaje contiene la palabra correctamente si es asi devolvemos el mensaje
-    if (result[0].message.includes('correctamente')) {
-      return { message: result[0].message };
-    } else {
+    if (!result[0].message.includes('correctamente')) {
       throw new BadRequestException(result[0].message);
     }
+
+    return { message: result[0].message };
   }
 
   // Listamos todos los usuarios
@@ -60,7 +60,7 @@ export class UsersService {
   async findOne(id: string) {
     // Buscamos el usuario por id
     const rol = await this.userRepository.findOne({
-      where: { codigoUser: id, estadoUser: true },
+      where: { codigoUser: id },
       relations: ['rol']
     });
 
@@ -110,13 +110,31 @@ export class UsersService {
             @CodigoUser = @0,
             @Mensaje = @Mensaje OUTPUT
           SELECT @Mensaje AS message;
-      `, [ id ]);
+      `, [id]);
 
     if (result[0].message.includes('correctamente')) {
       return { message: result[0].message };
     } else {
       throw new BadRequestException(result[0].message);
     }
+  }
+
+  // Hacemos la restauracion del user
+  async restore(id: string): Promise<{ message: string }> {
+    // Usamos el proc para restaurar el usuario
+    const result = await this.userRepository.query(`
+          DECLARE @Mensaje VARCHAR(100)
+          EXEC ProcRecoverUser
+            @CodigoUser = @0,
+            @Mensaje = @Mensaje OUTPUT
+          SELECT @Mensaje AS message;
+      `, [id]);
+
+    if (!result[0].message.includes('correctamente')) {
+      throw new BadRequestException(result[0].message);
+    }
+    
+    return { message: result[0].message };
   }
 
 }

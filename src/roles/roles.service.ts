@@ -106,4 +106,23 @@ export class RolesService {
       throw new BadRequestException(result[0].message);
     }
   }
+
+  // Hacemos la restauracion del rol
+  async restore(id: string): Promise<{ message: string }> {
+    // Usamos el proc para eliminar el rol
+    const result = await this.rolRepository.query(`
+          DECLARE @Mensaje VARCHAR(100)
+          EXEC ProcRecoverRol
+            @CodigoRol = @0,
+            @Mensaje = @Mensaje OUTPUT
+          SELECT @Mensaje AS message;
+      `, [id]);
+
+
+    if (result[0].message.includes('correctamente')) {
+      return { message: result[0].message };
+    } else {
+      throw new BadRequestException(result[0].message);
+    }
+  }
 }

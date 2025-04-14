@@ -24,7 +24,7 @@ export class CreateUserDto {
     @Transform(({ value }) => value.trim())
     @IsString()
     @IsNotEmpty()
-    password: string; // Este se convertirá a varbinary con hash
+    password: string; 
 
     @Transform(({ value }) => value.trim())  // elimina espacios en blanco del inicio y el final
     @IsUUID()
