@@ -1,52 +1,51 @@
 import {
   Controller, Get, Post,
-  Body, Patch, Param, Delete,
-  UseGuards, Put
+  Body, Patch, Param, Delete, Put
 } from '@nestjs/common';
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
-@SkipThrottle()
-@UseGuards(AuthGuard)
+
+
 @Controller('empleados')
 export class EmpleadosController {
   constructor(private readonly empleadosService: EmpleadosService) { }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Post()
   create(@Body() createEmpleadoDto: CreateEmpleadoDto) {
     return this.empleadosService.create(createEmpleadoDto);
   }
 
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get()
   findAll() {
     return this.empleadosService.findAll();
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.empleadosService.findOne(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEmpleadoDto: UpdateEmpleadoDto) {
     return this.empleadosService.update(id, updateEmpleadoDto);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.empleadosService.remove(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Put('/Activate/:id')
   restore(@Param('id') id: string) {
     return this.empleadosService.restore(id);

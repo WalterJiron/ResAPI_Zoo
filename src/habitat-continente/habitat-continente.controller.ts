@@ -2,46 +2,44 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } fro
 import { HabitatContinenteService } from './habitat-continente.service';
 import { CreateHabitatContinenteDto } from './dto/create-habitat-continente.dto';
 import { UpdateHabitatContinenteDto } from './dto/update-habitat-continente.dto';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
-@SkipThrottle()
-@UseGuards(AuthGuard)
 @Controller('habitat-continente')
 export class HabitatContinenteController {
   constructor(private readonly habitatContinenteService: HabitatContinenteService) {}
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Post()
   create(@Body() createHabitatContinenteDto: CreateHabitatContinenteDto) {
     return this.habitatContinenteService.create(createHabitatContinenteDto);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get()
   findAll() {
     return this.habitatContinenteService.findAll();
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.habitatContinenteService.findOne(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
     return this.habitatContinenteService.update(id, updateHabitatContinenteDto);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.habitatContinenteService.remove(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Put('/activate/:id')
   restore(@Param('id') id: string) {
     return this.habitatContinenteService.restore(id);

@@ -1,47 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { EspecieHabitatService } from './especie-habitat.service';
 import { CreateEspecieHabitatDto } from './dto/create-especie-habitat.dto';
 import { UpdateEspecieHabitatDto } from './dto/update-especie-habitat.dto';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
-@SkipThrottle()
-@UseGuards(AuthGuard)
-@Controller('especie/habitat')
+
+@Controller('especi-habitat')
 export class EspecieHabitatController {
   constructor(private readonly especieHabitatService: EspecieHabitatService) {}
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Post()
   create(@Body() createEspecieHabitatDto: CreateEspecieHabitatDto) {
     return this.especieHabitatService.create(createEspecieHabitatDto);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get()
   findAll() {
     return this.especieHabitatService.findAll();
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.especieHabitatService.findOne(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
     return this.especieHabitatService.update(id, updateEspecieHabitatDto);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.especieHabitatService.remove(id);
   }
 
-  @Throttle({ api: { limit: 100, ttl: 60000 } })
+  @Auth(Role.Admin)
   @Put('/activate/:id')
   restore(@Param('id') id: string) {
     return this.especieHabitatService.restore(id);

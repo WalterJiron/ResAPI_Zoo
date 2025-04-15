@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { User } from './users/entities/user.entity';
 import { Rol } from './roles/entities/role.entity';
-import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ContinentesModule } from './continentes/continentes.module';
@@ -16,7 +16,6 @@ import { EmpleadosModule } from './empleados/empleados.module';
 import { ThrottlerBehindProxyGuard } from './guard/throttler-behind-proxy.guard';
 import { HabitatsModule } from './habitats/habitats.module';
 import { ItinerariosModule } from './itinerarios/itinerarios.module';
-import { AuthGuard } from './auth/guard/auth.guard';
 import { EspecieHabitatModule } from './especie-habitat/especie-habitat.module';
 import { HabitatContinenteModule } from './habitat-continente/habitat-continente.module';
 import { GuiaItinerarioModule } from './guia-itinerario/guia-itinerario.module';
@@ -69,11 +68,11 @@ import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
       entities: [User, Rol]
     }),
 
+    AuthModule,
+
     UsersModule,
 
     RolesModule,
-
-    AuthModule,
 
     ContinentesModule,
 
@@ -99,13 +98,23 @@ import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
   ],
 
   providers: [
+    /*
     {
       provide: APP_GUARD,
       useClass: AuthGuard,  // Guard de autenticación global
     },
     {
+      provide:APP_GUARD,
+      useClass: RolesGuard,  // Para los permisos de las rutas
+    }
+    {
       provide: APP_GUARD,
       useClass: ThrottlerBehindProxyGuard,
+    },
+    */
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerBehindProxyGuard
     },
   ],
 })
