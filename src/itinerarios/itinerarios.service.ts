@@ -5,8 +5,8 @@ import { Repository, In } from 'typeorm';
 import { Itinerario } from './entities/itinerario.entity';
 import { Zona } from '../zonas/entities/zona.entity';
 import { Empleado } from '../empleados/entities/empleado.entity';
-import { ItinerarioZona } from './entities/itinerario-zona.entity';
-import { GuiaItinerario } from './entities/guia-itinerario.entity';
+import { ItinerarioZona } from '../itinerario-zona/entities/itinerario-zona.entity';
+import { GuiaItinerario } from '../guia-itinerario/entities/guia-itinerario.entity';
 import { CreateItinerarioDto } from './dto/create-itinerario.dto';
 import { UpdateItinerarioDto } from './dto/update-itinerario.dto';
 

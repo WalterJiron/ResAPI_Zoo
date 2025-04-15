@@ -17,6 +17,10 @@ import { ThrottlerBehindProxyGuard } from './guard/throttler-behind-proxy.guard'
 import { HabitatsModule } from './habitats/habitats.module';
 import { ItinerariosModule } from './itinerarios/itinerarios.module';
 import { AuthGuard } from './auth/guard/auth.guard';
+import { EspecieHabitatModule } from './especie-habitat/especie-habitat.module';
+import { HabitatContinenteModule } from './habitat-continente/habitat-continente.module';
+import { GuiaItinerarioModule } from './guia-itinerario/guia-itinerario.module';
+import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
 
 @Module({
   imports: [
@@ -83,7 +87,15 @@ import { AuthGuard } from './auth/guard/auth.guard';
 
     HabitatsModule,
 
-    ItinerariosModule
+    ItinerariosModule,
+
+    EspecieHabitatModule,
+
+    HabitatContinenteModule,
+
+    GuiaItinerarioModule,
+
+    ItinerarioZonaModule
   ],
 
   providers: [

@@ -8,5 +8,6 @@ import { Continente } from './entities/continente.entity';
   imports:[TypeOrmModule.forFeature([Continente])],
   controllers: [ContinentesController],
   providers: [ContinentesService],
+  exports:[TypeOrmModule],
 })
 export class ContinentesModule {}

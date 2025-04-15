@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
-import { ItinerarioZona } from '../../itinerarios/entities/itinerario-zona.entity';
+import { ItinerarioZona } from '../../itinerario-zona/entities/itinerario-zona.entity';
+import { Habitat } from 'src/habitats/entities/habitat.entity';
 
 @Entity({ name: 'Zona' })
 export class Zona {
@@ -19,7 +20,7 @@ export class Zona {
     @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
     dateCreate: Date;
 
-    @DeleteDateColumn({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoZona', type: 'bit', default: true })
@@ -27,4 +28,8 @@ export class Zona {
 
     @OneToMany(() => ItinerarioZona, itinerarioZona => itinerarioZona.zona)
     itinerarios: ItinerarioZona[];
+
+    // Palas tablas de uno a muchos
+    @OneToMany(() => Habitat, habitat => habitat.zona)
+    habitats: Habitat[];
 }

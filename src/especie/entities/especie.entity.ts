@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
+import { EspecieHabitat } from 'src/especie-habitat/entities/especie-habitat.entity';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
 
 @Entity({ name: 'Especie' })
 export class Especie {
@@ -37,4 +38,8 @@ export class Especie {
         default: true
     })
     estado: boolean;
+
+    // Para las tablas de muchos a muchos
+    @OneToMany(() => EspecieHabitat, especieHabitat => especieHabitat.especie)
+    habitats: EspecieHabitat[];
 }

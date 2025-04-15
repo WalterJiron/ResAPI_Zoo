@@ -1,6 +1,5 @@
-// src/itinerarios/entities/guia-itinerario.entity.ts
 import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Itinerario } from './itinerario.entity';
+import { Itinerario } from '../../itinerarios/entities/itinerario.entity';
 import { Empleado } from '../../empleados/entities/empleado.entity';
 
 @Entity({ name: 'GuiaItinerario' })

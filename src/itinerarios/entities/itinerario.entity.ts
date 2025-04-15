@@ -1,7 +1,7 @@
 // src/itinerarios/entities/itinerario.entity.ts
 import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
-import { ItinerarioZona } from './itinerario-zona.entity';
-import { GuiaItinerario } from './guia-itinerario.entity';
+import { ItinerarioZona } from '../../itinerario-zona/entities/itinerario-zona.entity';
+import { GuiaItinerario } from '../../guia-itinerario/entities/guia-itinerario.entity';
 
 @Entity({ name: 'Itinerario' })
 export class Itinerario {
