@@ -12,15 +12,19 @@ export class HabitatContinenteService {
     return `This action returns all habitatContinente`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} habitatContinente`;
   }
 
-  update(id: number, updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
+  update(id: string, updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
     return `This action updates a #${id} habitatContinente`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} habitatContinente`;
+  }
+
+  restore(id: string) {
+    return `This action restore a #${id} habitatContinente`;
   }
 }

@@ -12,15 +12,19 @@ export class ItinerarioZonaService {
     return `This action returns all itinerarioZona`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} itinerarioZona`;
   }
 
-  update(id: number, updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
+  update(id: string, updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
     return `This action updates a #${id} itinerarioZona`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    return `This action removes a #${id} itinerarioZona`;
+  }
+
+  restore(id: string) {
     return `This action removes a #${id} itinerarioZona`;
   }
 }

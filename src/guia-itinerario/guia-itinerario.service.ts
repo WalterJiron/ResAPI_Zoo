@@ -12,15 +12,19 @@ export class GuiaItinerarioService {
     return `This action returns all guiaItinerario`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} guiaItinerario`;
   }
 
-  update(id: number, updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
+  update(id: string, updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
     return `This action updates a #${id} guiaItinerario`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    return `This action removes a #${id} guiaItinerario`;
+  }
+
+  restore(id: string) {
     return `This action removes a #${id} guiaItinerario`;
   }
 }

@@ -12,15 +12,19 @@ export class EspecieHabitatService {
     return `This action returns all especieHabitat`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} especieHabitat`;
   }
 
-  update(id: number, updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
+  update(id: string, updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
     return `This action updates a #${id} especieHabitat`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
+    return `This action removes a #${id} especieHabitat`;
+  }
+
+  restore(id: string) {
     return `This action removes a #${id} especieHabitat`;
   }
 }
