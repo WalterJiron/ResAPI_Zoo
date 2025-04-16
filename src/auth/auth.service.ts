@@ -1,30 +1,28 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto'
+import { LoginDto } from './dto/login.dto';
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { jwtConstants } from './constants/jwt.constant';
 
 @Injectable()
 export class AuthService {
-  // Inyectamos la entidad de User
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) { }
 
-  // Para logear al usuario
   async login({ email, password }: LoginDto) {
-    // Usamos el proc para verificar el usuario
     const result = await this.userRepository.query(`
-            DECLARE @Mensaje VARCHAR(100);
-            EXEC sp_VerificarUsuario 
-              @Email = '${email}', 
-              @Clave = '${password}', 
-              @Mensaje = @Mensaje OUTPUT;
+      DECLARE @Mensaje VARCHAR(100);
+      EXEC sp_VerificarUsuario 
+        @Email = '${email}', 
+        @Clave = '${password}', 
+        @Mensaje = @Mensaje OUTPUT;
 
-            SELECT @Mensaje AS mensaje;
+      SELECT @Mensaje AS mensaje;
     `);
 
     const mensaje = result[0]?.mensaje;
@@ -33,23 +31,51 @@ export class AuthService {
       throw new UnauthorizedException(mensaje);
     }
 
-    return this.createToken(email);
+    return this.createTokens(email);
   }
 
-  // Crear el token
-  async createToken(email: string){
+  async createTokens(email: string) {
     const user = await this.userRepository.query(`
       SELECT CodigoUser AS codigo, NameUser AS nombre, rol  
       FROM Users 
       WHERE Email = '${email}';
     `);
 
-    // Creamos el payload que es lo que se va a guardar en el token
-    const payload = { email: email, rol: user[0]?.rol };
+    const payload = { email: email, rol: user[0]?.rol, };
 
-    // Generamos el token
-    const token = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      secret: jwtConstants.accessSecret,
+      expiresIn: process.env.JWT_ACCESS_EXPIRES_IN, // Acceso valido por 15 minutos
+    });
 
-    return { token: token };
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: jwtConstants.refreshSecret,
+      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN, // Refresco valido por 2 días
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: jwtConstants.refreshSecret,
+      });
+
+      const newAccessToken = this.jwtService.sign(
+        { email: payload.email, rol: payload.rol },
+        {
+          secret: jwtConstants.accessSecret,
+          expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
+        },
+      );
+
+      return { accessToken: newAccessToken };
+    } catch (error) {
+      throw new UnauthorizedException('Refresh token invalido o expirado');
+    }
   }
 }
