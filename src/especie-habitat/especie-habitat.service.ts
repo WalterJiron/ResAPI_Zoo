@@ -4,7 +4,7 @@ import { UpdateEspecieHabitatDto } from './dto/update-especie-habitat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EspecieHabitat } from './entities/especie-habitat.entity';
 import { Repository } from 'typeorm';
-import { isUUID } from 'class-validator';
+import { ValidationService } from 'src/common/validation.services';
 
 @Injectable()
 export class EspecieHabitatService {
@@ -14,7 +14,19 @@ export class EspecieHabitatService {
   ){}
 
   async create(createEspecieHabitatDto: CreateEspecieHabitatDto) {
-    return 'This action adds a new especieHabitat';
+    const result = await this.especie_hbitatRepository.query(`
+      DECLARE @Mensaje AS VARCHAR(100)
+        EXEC INSERTAR_ESPECIEHABITAD
+            @ESPECIE = @0,
+            @HABITAD = @1,
+            @Mensaje = @Mensaje OUTPUT
+        SELECT @Mensaje AS message;
+      `,[
+        createEspecieHabitatDto.especieId,
+        createEspecieHabitatDto.habitatId,
+      ]);
+
+    return ValidationService.verifiedResult(result, 'realizada');
   }
 
   async findAll() {
@@ -28,10 +40,15 @@ export class EspecieHabitatService {
   }
 
   async findOne(id: string) {
-    if (!isUUID(id)) {
-      throw new BadRequestException('El parámetro debe ser un UUID válido');
+    const especie_habitat = await this.especie_hbitatRepository.findOne({
+       where: { especieId : id}}
+      );
+
+    if(!especie_habitat){
+      throw new BadRequestException(`no se encotro la union de especie con el codigo: ${id}`);
     }
-    return `This action returns a #${id} especieHabitat`;
+
+    return especie_habitat;
   }
 
   async update(id: string, updateEspecieHabitatDto: UpdateEspecieHabitatDto) {

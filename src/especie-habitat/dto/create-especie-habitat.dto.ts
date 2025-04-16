@@ -6,8 +6,4 @@ export class CreateEspecieHabitatDto {
 
     @IsString()
     habitatId: string;
-
-    @IsBoolean()
-    @IsOptional()
-    estadoEH?: boolean;
 }
