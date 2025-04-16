@@ -1,6 +1,6 @@
 import { 
     Entity, Column, PrimaryColumn, 
-    CreateDateColumn, DeleteDateColumn, 
+    CreateDateColumn, 
     ManyToOne, JoinColumn 
 } from 'typeorm';
 import { Cargo } from '../../cargos/entities/cargo.entity';

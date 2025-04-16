@@ -1,5 +1,6 @@
-import { EspecieHabitat } from 'src/especie-habitat/entities/especie-habitat.entity';
-import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
+import { CuidadorEspecie } from '../../cuidador-especie/entities/cuidador-especie.entity';
+import { EspecieHabitat } from '../../especie-habitat/entities/especie-habitat.entity';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, OneToMany } from 'typeorm';
 
 @Entity({ name: 'Especie' })
 export class Especie {
@@ -40,6 +41,9 @@ export class Especie {
     estado: boolean;
 
     // Para las tablas de muchos a muchos
-    @OneToMany(() => EspecieHabitat, especieHabitat => especieHabitat.especie)
+    @OneToMany(() => EspecieHabitat, especieHabitat => especieHabitat.especie, { eager: true })
     habitats: EspecieHabitat[];
+
+    @OneToMany(() => CuidadorEspecie, cuidadorEspecie => cuidadorEspecie.especie, { eager: true })
+    cuidadores: CuidadorEspecie[];
 }

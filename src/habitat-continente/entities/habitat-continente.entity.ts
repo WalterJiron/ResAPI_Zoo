@@ -14,7 +14,7 @@ export class HabitatContinente {
     @JoinColumn({ name: 'Habitat' })
     habitat: Habitat;
 
-    @ManyToOne(() => Continente, continente => continente.habitats)
+    @ManyToOne(() => Continente, continente => continente.habitats, { eager: true })
     @JoinColumn({ name: 'Cont' })
     continente: Continente;
 

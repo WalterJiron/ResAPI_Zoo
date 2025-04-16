@@ -22,7 +22,7 @@ export class Habitat {
     descripHabitat: string;
 
     // Uniono de  muchos a uno
-    @ManyToOne(() => Zona, zona => zona.habitats)
+    @ManyToOne(() => Zona, zona => zona.habitats, { eager: true })
     @JoinColumn({ name: 'CodigoZona' })
     zona: Zona;
 
@@ -36,9 +36,9 @@ export class Habitat {
     estadoHabitat: boolean;
 
     //------------- UNION DE MUCHOS A MUCHOS -------------//
-    @OneToMany(() => HabitatContinente, habitatContinente => habitatContinente.habitat)
+    @OneToMany(() => HabitatContinente, habitatContinente => habitatContinente.habitat,)
     continentes: HabitatContinente[];
 
-    @OneToMany(() => EspecieHabitat, especieHabitat => especieHabitat.habitat)
+    @OneToMany(() => EspecieHabitat, especieHabitat => especieHabitat.habitat, { eager: true })
     especies: EspecieHabitat[];
 }

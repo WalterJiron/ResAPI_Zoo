@@ -20,6 +20,7 @@ import { EspecieHabitatModule } from './especie-habitat/especie-habitat.module';
 import { HabitatContinenteModule } from './habitat-continente/habitat-continente.module';
 import { GuiaItinerarioModule } from './guia-itinerario/guia-itinerario.module';
 import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
+import { CuidadorEspecieModule } from './cuidador-especie/cuidador-especie.module';
 
 @Module({
   imports: [
@@ -94,7 +95,9 @@ import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
 
     GuiaItinerarioModule,
 
-    ItinerarioZonaModule
+    ItinerarioZonaModule,
+
+    CuidadorEspecieModule
   ],
 
   providers: [
