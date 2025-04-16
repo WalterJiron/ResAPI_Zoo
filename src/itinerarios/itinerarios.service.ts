@@ -10,10 +10,6 @@ import { GuiaItinerario } from '../guia-itinerario/entities/guia-itinerario.enti
 import { CreateItinerarioDto } from './dto/create-itinerario.dto';
 import { UpdateItinerarioDto } from './dto/update-itinerario.dto';
 
-/**
- * Servicio para la gestión de itinerarios, zonas y guías asociados.
- * Proporciona operaciones CRUD completas con manejo de relaciones many-to-many.
- */
 @Injectable()
 export class ItinerariosService {
   constructor(
@@ -35,7 +31,6 @@ export class ItinerariosService {
 
   async findAll(): Promise<Itinerario[]> {
     return this.itinerarioRepository.find({
-      where: { estado: true },
       relations: ['zonas.zona', 'guias.empleado'],
       order: { fecha: 'ASC', horaInicio: 'ASC' }, // Ordenar por fecha y hora
     });

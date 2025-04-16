@@ -1,13 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto'
-import { UsersService } from 'src/users/users.service';
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-
-//import * as bcryptjs from 'bcryptjs';   -------- POSIBLE IMPLEMENTACION
-
 
 @Injectable()
 export class AuthService {
@@ -37,6 +33,11 @@ export class AuthService {
       throw new UnauthorizedException(mensaje);
     }
 
+    return this.createToken(email);
+  }
+
+  // Crear el token
+  async createToken(email: string){
     const user = await this.userRepository.query(`
       SELECT CodigoUser AS codigo, NameUser AS nombre, rol  
       FROM Users 

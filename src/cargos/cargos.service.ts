@@ -4,6 +4,7 @@ import { UpdateCargoDto } from './dto/update-cargo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cargo } from './entities/cargo.entity';
 import { Repository } from 'typeorm';
+import { ValidationService } from '../common/validation.services';
 
 @Injectable()
 export class CargosService {
@@ -26,11 +27,7 @@ export class CargosService {
     ]
     );
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async findAll() {
@@ -69,11 +66,7 @@ export class CargosService {
     ]
     );
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async remove(id: string): Promise<{ message: string }> {
@@ -86,11 +79,7 @@ export class CargosService {
       `, [id]
     );
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async restore(id: string): Promise<{ message: string }> {
@@ -103,10 +92,6 @@ export class CargosService {
       `, [id]
     );
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 }

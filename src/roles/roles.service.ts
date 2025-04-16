@@ -4,6 +4,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rol } from './entities/role.entity';
 import { Repository } from 'typeorm';
+import { ValidationService } from '../common/validation.services';
 
 @Injectable()
 export class RolesService {
@@ -28,13 +29,7 @@ export class RolesService {
         createRoleDto.descripRol
       ]);
 
-    // Miramos si el mensaje contiene la palabra correctamente si es asi devolvemos el mensaje
-    if (result[0].message.includes('correctamente')){
-      return {message: result[0].message};
-    } else{   // Si no, lanzamos una excepcion
-      throw new BadRequestException(result[0].message);
-    }
-
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   // Listamos todos los roles
@@ -80,12 +75,7 @@ export class RolesService {
         updateRoleDto.descripRol
       ]);
 
-      // Miramos si el mensaje contiene la palabra correctamente si es asi devolvemos el mensaje
-      if (result[0].message.includes('correctamente')) {
-        return { message: result[0].message };
-      } else {   
-        throw new BadRequestException(result[0].message);
-      }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   // Hacemos la eliminacion logica del rol
@@ -100,11 +90,7 @@ export class RolesService {
       `, [ id ]);
 
     
-    if (result[0].message.includes('correctamente')) {
-      return { message: result[0].message };
-    } else {
-      throw new BadRequestException(result[0].message);
-    }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   // Hacemos la restauracion del rol
@@ -119,10 +105,6 @@ export class RolesService {
       `, [id]);
 
 
-    if (result[0].message.includes('correctamente')) {
-      return { message: result[0].message };
-    } else {
-      throw new BadRequestException(result[0].message);
-    }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 }

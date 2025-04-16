@@ -4,6 +4,7 @@ import { UpdateZonaDto } from './dto/update-zona.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Zona } from './entities/zona.entity';
 import { Repository } from 'typeorm';
+import { ValidationService } from '../common/validation.services';
 
 @Injectable()
 export class ZonasService {
@@ -11,6 +12,7 @@ export class ZonasService {
     @InjectRepository(Zona)
     private readonly zonaRepository: Repository<Zona>,
   ) { }
+
   async create(createZonaDto: CreateZonaDto): Promise<{ message: string }> {
     const result = await this.zonaRepository.query(`
             DECLARE @Mensaje AS NVARCHAR(100)
@@ -25,11 +27,8 @@ export class ZonasService {
     ]
     );
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
+    return ValidationService.verifiedResult(result, 'correctamente');
 
-    return { message: result[0].message };
   }
 
   async findAll() {
@@ -68,11 +67,7 @@ export class ZonasService {
     ]
     );
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   async remove(id: string) {
@@ -84,11 +79,7 @@ export class ZonasService {
             SELECT @Mensaje AS message;
       `, [id]);
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   async restore(id: string) {
@@ -100,10 +91,6 @@ export class ZonasService {
             SELECT @Mensaje AS message;
       `, [id]);
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 }

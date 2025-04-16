@@ -45,7 +45,7 @@ export class Empleado {
     @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
     dateCreate: Date;
 
-    @DeleteDateColumn({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoEmpleado', type: 'bit', default: true })

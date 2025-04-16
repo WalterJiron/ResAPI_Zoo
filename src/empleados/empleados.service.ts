@@ -4,6 +4,7 @@ import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Empleado } from './entities/empleado.entity';
 import { Repository } from 'typeorm';
+import { ValidationService } from '../common/validation.services';
 
 @Injectable()
 export class EmpleadosService {
@@ -39,11 +40,7 @@ export class EmpleadosService {
       createEmpleadoDto.idCargo,
     ]);
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async findAll() {
@@ -95,11 +92,7 @@ export class EmpleadosService {
       updateEmpleadoDto.idCargo,
     ]);
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async remove(id: string) {
@@ -113,11 +106,7 @@ export class EmpleadosService {
       id,
     ]);
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async restore(id: string) {
@@ -131,10 +120,6 @@ export class EmpleadosService {
       id,
     ]);
 
-    if (!result[0].message.includes('exito')) {
-      throw new BadRequestException({ message: result[0].message });
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'exito');
   }
 }

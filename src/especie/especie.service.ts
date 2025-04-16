@@ -4,6 +4,7 @@ import { UpdateEspecieDto } from './dto/update-especie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Especie } from './entities/especie.entity';
 import { Repository } from 'typeorm';
+import { ValidationService } from '../common/validation.services';
 
 @Injectable()
 export class EspecieService {
@@ -28,11 +29,7 @@ export class EspecieService {
     ]
     );
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException(result[0].message);
-    }
-
-    return { message: result[0].message };
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   async findAll() {
@@ -74,11 +71,7 @@ export class EspecieService {
       updateEspecieDto.descripcion
     ]);
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException(result[0].message);
-    }
-
-    return { message: result[0].message }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   async remove(id: string): Promise<{ message: string }> {
@@ -90,11 +83,7 @@ export class EspecieService {
               SELECT @Mensaje AS message;
       `, [id]);
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException(result[0].message);
-    }
-
-    return { message: result[0].message }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
   async restore(id: string): Promise<{ message: string }> {
@@ -106,10 +95,6 @@ export class EspecieService {
               SELECT @Mensaje AS message;
       `, [id]);
 
-    if (!result[0].message.includes('correctamente')) {
-      throw new BadRequestException(result[0].message);
-    }
-    
-    return { message: result[0].message }
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 }
