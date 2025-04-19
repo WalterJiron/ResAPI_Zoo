@@ -1,5 +1,5 @@
 
 export enum Role {
     User = '4941897C-5C9B-4F49-8902-458EF2118CD5',
-    Admin = 'EA6DB504-C2A0-4340-839B-D323D086D49B',   // Para el admin
+    Admin = '71D42499-AFC1-4EF0-9C58-02B1A10A3F2A',   // Para el admin
 }

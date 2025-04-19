@@ -1,19 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGuiaItinerarioDto } from './dto/create-guia-itinerario.dto';
 import { UpdateGuiaItinerarioDto } from './dto/update-guia-itinerario.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { GuiaItinerario } from './entities/guia-itinerario.entity';
+import { Repository } from 'typeorm';
+import { ValidationService } from 'src/common/validation.services';
 
 @Injectable()
 export class GuiaItinerarioService {
-  create(createGuiaItinerarioDto: CreateGuiaItinerarioDto) {
-    return 'This action adds a new guiaItinerario';
+  constructor(
+    @InjectRepository(GuiaItinerario)
+      private readonly GuiaItinerarioRepository :Repository<GuiaItinerario>,
+      ){ }
+
+      async create(GuiaItinerarioDto: CreateGuiaItinerarioDto) {
+        const Result = await this.GuiaItinerarioRepository.query(`
+          DECLARE @Mensaje AS VARCHAR(100)
+          EXEC INSERTAR_GUIA_ITINERARIO
+              @IdEmpleado = @0,
+              @IdItinerario = @1,
+              @MENSAJE = @Mensaje OUTPUT
+          SELECT @Mensaje AS message
+          `,[
+            GuiaItinerarioDto.empleadoId,
+            GuiaItinerarioDto.itinerarioId
+          ]);
+
+          return ValidationService.verifiedResult(Result, 'correctamente');
+      }
+  async findAll() {
+    const GuiaItinerario = await this.GuiaItinerarioRepository.find();
+    
+    if(!GuiaItinerario){
+      throw new NotFoundException (`No se encontro la relacion`);
+    }
+
+    return GuiaItinerario;
   }
 
-  findAll() {
-    return `This action returns all guiaItinerario`;
-  }
+  async findOne(id: string) {
+    const Guia_Itinerario =await this.GuiaItinerarioRepository.findOne({where: {empleadoId: id}}
+    );
 
-  findOne(id: string) {
-    return `This action returns a #${id} guiaItinerario`;
+    if(!Guia_Itinerario){
+      throw new BadRequestException (`No se encontro la relacion con el id ${id}`);
+    }
+    
+    return Guia_Itinerario;
   }
 
   update(id: string, updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {

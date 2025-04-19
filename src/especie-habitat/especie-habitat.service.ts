@@ -45,7 +45,7 @@ export class EspecieHabitatService {
       );
 
     if(!especie_habitat){
-      throw new BadRequestException(`no se encotro la union de especie con el codigo: ${id}`);
+      throw new BadRequestException(`no se encontro la union de especie con el codigo: ${id}`);
     }
 
     return especie_habitat;

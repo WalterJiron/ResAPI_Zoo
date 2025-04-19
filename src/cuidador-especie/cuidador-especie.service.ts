@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCuidadorEspecieDto } from './dto/create-cuidador-especie.dto';
 import { UpdateCuidadorEspecieDto } from './dto/update-cuidador-especie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,7 +12,19 @@ export class CuidadorEspecieService {
     private readonly cuidadorEspecieRepository: Repository<CuidadorEspecie>,
   ){}
   async create(createCuidadorEspecieDto: CreateCuidadorEspecieDto) {
-    return 'This action adds a new cuidadorEspecie';
+    const result = await this.cuidadorEspecieRepository.query(`
+      DECLARE @Mensaje AS VARCHAR(100)
+      EXEC Insertar_Cuidador_Especie
+          @IdEmpleado = @0,
+          @IdEspecie = @1,
+          @FechaAsignacion =@2,
+          @MENSAJE = @mensaje OUTPUT
+      SELECT @Mensaje AS message
+      `,[
+        createCuidadorEspecieDto.idEmpleado,
+        createCuidadorEspecieDto.idEspecie,
+        createCuidadorEspecieDto.fechaAsignacion,
+      ]);
   }
 
   async findAll() {
@@ -25,9 +37,17 @@ export class CuidadorEspecieService {
     return cuidadoresEspecies
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} cuidadorEspecie`;
+  async findOne(id: string) {
+    const cuidadorEspecie = await this.cuidadorEspecieRepository.findOne({ where: { idEmpleado: id } });
+    
+    if(!cuidadorEspecie){
+      throw new BadRequestException(`No se encontro una union con el id del cuidador :${id}`);
+    }
+
+    return cuidadorEspecie;
   }
+
+
 
   async update(id: number, updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
     return `This action updates a #${id} cuidadorEspecie`;

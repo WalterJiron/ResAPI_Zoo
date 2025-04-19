@@ -2,7 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CuidadorEspecieService } from './cuidador-especie.service';
 import { CreateCuidadorEspecieDto } from './dto/create-cuidador-especie.dto';
 import { UpdateCuidadorEspecieDto } from './dto/update-cuidador-especie.dto';
+import { SkipThrottle } from '@nestjs/throttler';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 
+@Auth(Role.Admin)
 @Controller('cuidador-especie')
 export class CuidadorEspecieController {
   constructor(private readonly cuidadorEspecieService: CuidadorEspecieService) {}
@@ -19,7 +23,7 @@ export class CuidadorEspecieController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cuidadorEspecieService.findOne(+id);
+    return this.cuidadorEspecieService.findOne(id);
   }
 
   @Patch(':id')
