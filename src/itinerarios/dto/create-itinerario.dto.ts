@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsDateString, IsBoolean, IsOptional } from 'class-v
 
 export class CreateItinerarioDto {
     @IsString()
-    duracion: string;
+    duracion: string;   // Format: 'HH:mm:ss'
 
     @IsNumber()
     longitud: number;
@@ -17,15 +17,9 @@ export class CreateItinerarioDto {
     fecha: Date;
 
     @IsString()
-    horaInicio: string;
+    horaInicio: string;   // Format: 'HH:mm:ss'
 
     @IsBoolean()
     @IsOptional()
     estado?: boolean;
-
-    @IsString({ each: true })
-    zonas: string[]; // IDs de las zonas
-
-    @IsString({ each: true })
-    guias: string[]; // IDs de los guías
 }

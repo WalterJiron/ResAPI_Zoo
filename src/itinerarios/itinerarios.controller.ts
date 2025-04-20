@@ -1,4 +1,3 @@
-// src/itinerarios/itinerarios.controller.ts
 import { Controller, Get, Post, Body, Param, Put, Delete, Patch } from '@nestjs/common';
 import { ItinerariosService } from './itinerarios.service';
 import { CreateItinerarioDto } from './dto/create-itinerario.dto';

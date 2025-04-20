@@ -50,7 +50,7 @@ export class AuthService {
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: jwtConstants.refreshSecret,
-      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN, // Refresco valido por 2 días
+      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN, // Refresco valido por 2 dias
     });
 
     return {
