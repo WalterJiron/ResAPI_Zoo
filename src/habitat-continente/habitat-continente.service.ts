@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { HabitatContinente } from './entities/habitat-continente.entity';
 import { Repository } from 'typeorm';
 import { ValidationService } from 'src/common/validation.services';
+import { DeleteRestoreHabitadContinenteDto } from './dto/delete-restore-habitad-continente-dto';
 
 @Injectable()
 export class HabitatContinenteService {
@@ -15,14 +16,14 @@ export class HabitatContinenteService {
 
   async create(createHabitadContinenteDto: CreateHabitatContinenteDto) {
     const result = await this.habitatContinenteRepository.query(`
-      DECLARE @Mensaje as VARCHAR(100)
+      DECLARE @Mensaje as NVARCHAR(100)
       EXEC Insertar_HabitadContinente
         @Habitad = @0,
         @CONTINENTE = @1,
         @MENSAJE =@Mensaje OUTPUT
       SELECT @Mensaje as message;
       `,[
-        createHabitadContinenteDto.continenteId,
+        createHabitadContinenteDto.habitatId,
         createHabitadContinenteDto.continenteId,
       ]);
 
@@ -48,15 +49,52 @@ export class HabitatContinenteService {
     return habitad_continente;
   }
 
-  update(id: string, updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
-    return `This action updates a #${id} habitatContinente`;
+  async update( updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
+    const result = await this.habitatContinenteRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC  Update_HabitatContinente
+            @Habitad =@0,
+            @CONTINENTE =@1,
+            @HabitadVieja =@2,
+            @CONTINENTE_VIEJO =@3,
+            @MENSAJE =@MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        updateHabitatContinenteDto.idHabitadNueva,
+        updateHabitatContinenteDto.idContinenteNuevo,
+        updateHabitatContinenteDto.habitatId,
+        updateHabitatContinenteDto.continenteId,
+      ])
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} habitatContinente`;
+  async remove(deleteEspecieHabitatDto: DeleteRestoreHabitadContinenteDto) {
+    const result = await this.habitatContinenteRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC Eliminar_HabitatContinente
+            @Habitat = @0,
+            @Cont = @1,
+            @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        deleteEspecieHabitatDto.idHabitat,
+        deleteEspecieHabitatDto.idContinente,
+      ]);
+    return ValidationService.verifiedResult(result, 'desactivada');
   }
 
-  restore(id: string) {
-    return `This action restore a #${id} habitatContinente`;
+  async restore(restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto) {
+    const result = await this.habitatContinenteRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC Activar_HabitatContinente
+          @Habitat = @0 ,
+          @Cont = @1,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        restoreHabitadContinenteDto.idHabitat,
+        restoreHabitadContinenteDto.idContinente,
+      ])
+    return ValidationService.verifiedResult(result, 'activada');
   }
 }

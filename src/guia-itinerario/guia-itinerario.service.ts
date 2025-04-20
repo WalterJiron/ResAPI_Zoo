@@ -4,7 +4,8 @@ import { UpdateGuiaItinerarioDto } from './dto/update-guia-itinerario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GuiaItinerario } from './entities/guia-itinerario.entity';
 import { Repository } from 'typeorm';
-import { ValidationService } from 'src/common/validation.services';
+import { ValidationService } from '../common/validation.services';
+import { DeleteRestoreGuiaItinerarioDto } from './dto/delete-restore-guia-itinerario-dto';
 
 @Injectable()
 export class GuiaItinerarioService {
@@ -15,7 +16,7 @@ export class GuiaItinerarioService {
 
       async create(GuiaItinerarioDto: CreateGuiaItinerarioDto) {
         const Result = await this.GuiaItinerarioRepository.query(`
-          DECLARE @Mensaje AS VARCHAR(100)
+          DECLARE @Mensaje AS NVARCHAR(100)
           EXEC INSERTAR_GUIA_ITINERARIO
               @IdEmpleado = @0,
               @IdItinerario = @1,
@@ -49,15 +50,52 @@ export class GuiaItinerarioService {
     return Guia_Itinerario;
   }
 
-  update(id: string, updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
-    return `This action updates a #${id} guiaItinerario`;
+  async update(updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
+    const result = await this.GuiaItinerarioRepository.query(`
+        DECLARE @MENSAJE AS NVARCHAR(100)
+        EXEC UPDATE_GUIA_ITINERARIO
+            @IDEMPLEADO_VIEJO = @0,
+            @IDITINERARIO_VIEJO = @1,
+            @IdEmpleado = @2,
+            @IdItinerario = @3,
+            @MENSAJE = @MENSAJE OUTPUT
+        SELECT @MENSAJE AS message;
+      `,[
+        updateGuiaItinerarioDto.empleadoId,
+        updateGuiaItinerarioDto.itinerarioId,
+        updateGuiaItinerarioDto.idEmpleadoNuevo,
+        updateGuiaItinerarioDto.idItinerarioNuevo
+      ])
+    return ValidationService.verifiedResult(result,'exito');
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} guiaItinerario`;
+  async remove(deleteGuiaItinerarioDto: DeleteRestoreGuiaItinerarioDto) {
+    const result = await this.GuiaItinerarioRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC ELIMINAR_GUIAITINERARIO
+          @IdEmpleado =@0,
+          @IdItinerario =@1,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        deleteGuiaItinerarioDto.idGuia,
+        deleteGuiaItinerarioDto.idItinerario,
+      ]);
+    return ValidationService.verifiedResult(result,'correctamente');
   }
 
-  restore(id: string) {
-    return `This action removes a #${id} guiaItinerario`;
+  async restore(restoreGuiaItinerarioDto: DeleteRestoreGuiaItinerarioDto) {
+    const result = await this.GuiaItinerarioRepository.query(`
+      DECLARE @MENSAJE AS VARCHAR(100)
+      EXEC ACTIVAR_GUIAITINERARIO
+          @IdEmpleado = @0,
+          @IdItinerario = @1,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        restoreGuiaItinerarioDto.idGuia,
+        restoreGuiaItinerarioDto.idItinerario,
+      ]);
+    return ValidationService.verifiedResult(result,'correctamente');
   }
 }

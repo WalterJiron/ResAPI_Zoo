@@ -4,6 +4,8 @@ import { CreateHabitatContinenteDto } from './dto/create-habitat-continente.dto'
 import { UpdateHabitatContinenteDto } from './dto/update-habitat-continente.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
+import { DeleteRestoreCuidadorEspecieDto } from 'src/cuidador-especie/dto/delete-restore-cuidador-especie-dto';
+import { DeleteRestoreHabitadContinenteDto } from './dto/delete-restore-habitad-continente-dto';
 
 @Auth(Role.Admin)
 @Controller('habitat-continente')
@@ -25,18 +27,18 @@ export class HabitatContinenteController {
     return this.habitatContinenteService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
-    return this.habitatContinenteService.update(id, updateHabitatContinenteDto);
+  @Patch()
+  update( @Body() updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
+    return this.habitatContinenteService.update( updateHabitatContinenteDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.habitatContinenteService.remove(id);
+  @Delete()
+  remove(@Body() deleteHabitatContinenteDto: DeleteRestoreHabitadContinenteDto) {
+    return this.habitatContinenteService.remove(deleteHabitatContinenteDto);
   }
 
-  @Put('/activate/:id')
-  restore(@Param('id') id: string) {
-    return this.habitatContinenteService.restore(id);
+  @Put('/activate')
+  restore(@Body() restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto) {
+    return this.habitatContinenteService.restore(restoreHabitadContinenteDto);
   }
 }

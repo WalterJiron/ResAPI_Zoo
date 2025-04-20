@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EspecieHabitat } from './entities/especie-habitat.entity';
 import { Repository } from 'typeorm';
 import { ValidationService } from 'src/common/validation.services';
+import { DeleteRestoreEspecieHabitatDto } from './dto/delete-restore-especie-habitad-dto';
 
 @Injectable()
 export class EspecieHabitatService {
@@ -51,15 +52,53 @@ export class EspecieHabitatService {
     return especie_habitat;
   }
 
-  async update(id: string, updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
-    return `This action updates a #${id} especieHabitat`;
+  async update( updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
+    const result  = await this.especie_hbitatRepository.query(`
+        DECLARE @MENSAJE AS VARCHAR(100)
+        EXEC UPDATE_ESPECIEHABITAD
+          @IDESPECIE_VIEJO = @0,
+          @IDHABITAD_VIEJO =@1,
+          @ESPECIE =@2,
+          @HABITAD =@3,
+          @MENSAJE = @MENSAJE OUTPUT
+        SELECT @MENSAJE AS message
+      `,[
+        updateEspecieHabitatDto.especieId,
+        updateEspecieHabitatDto.habitatId,
+        updateEspecieHabitatDto.idEspecieNuevo,
+        updateEspecieHabitatDto.idHabitatNuevo
+      ])
+    return ValidationService.verifiedResult(result, 'relacion');
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} especieHabitat`;
+  async remove(deleteEspecieHabitatDto: DeleteRestoreEspecieHabitatDto) {
+    const result = await this.especie_hbitatRepository.query(
+      `
+      DECLARE @MENSAJE AS VARCHAR(100)
+      EXEC Desactivar_EspecieHabitat
+          @Especie = @0,
+          @Habitat = @1,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        deleteEspecieHabitatDto.idEspecie,
+        deleteEspecieHabitatDto.idHabitat
+      ])
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async restore(id: string) {
-    return `This action removes a #${id} especieHabitat`;
+  async restore(restoreCuidadorEspecieDto: DeleteRestoreEspecieHabitatDto) {
+    const result  = await this.especie_hbitatRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC Activar_EspecieHabitat
+          @Especie = @0,
+          @Habitat = @1,
+          @MENSAJE = @MENSAJE OUTPUT 
+      SELECT @MENSAJE AS message;
+      `,[
+        restoreCuidadorEspecieDto.idEspecie,
+        restoreCuidadorEspecieDto.idHabitat
+      ])
+    return ValidationService.verifiedResult(result, 'exito');
   }
 }

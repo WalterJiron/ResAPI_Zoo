@@ -7,5 +7,5 @@ export class UpdateCuidadorEspecieDto extends PartialType(CreateCuidadorEspecieD
         idEmpleadoNuevo: string;
 
         @IsString()
-        idEspecieNuevo: string
+        idEspecieNuevo: string;
 }

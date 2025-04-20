@@ -5,11 +5,5 @@ export class CreateEspecieHabitatDto {
     especieId: string;
 
     @IsString()
-    idespecieNueva: string
-
-    @IsString()
     habitatId: string;
-
-    @IsString()
-    idHabitatNueva: string
 }

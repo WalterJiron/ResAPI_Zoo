@@ -5,11 +5,6 @@ export class CreateItinerarioZonaDto {
     itinerarioId: string;
 
     @IsString()
-    idItinerarioNueva: string;
-
-    @IsString()
     zonaId: string;
 
-    @IsString()
-    idZonaNueva: string;
 }

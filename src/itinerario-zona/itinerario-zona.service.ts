@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ItinerarioZona } from './entities/itinerario-zona.entity';
 import { Repository } from 'typeorm';
 import { ValidationService } from 'src/common/validation.services';
+import { DeleteRestoreItinerarioZonaDto } from './dto/delete-restore-itinerario-zona-dto';
 
 @Injectable()
 export class ItinerarioZonaService {
@@ -13,13 +14,13 @@ export class ItinerarioZonaService {
       private readonly createItinerarioZonaRepository: Repository<ItinerarioZona>, ){ }
 
   async create(createItinerarioZonaDto: CreateItinerarioZonaDto) {
-    const itinerarioZona = this.createItinerarioZonaRepository.query(`
-      DECLARE @Mensaje AS VARCHAR(100)
+    const itinerarioZona = await this.createItinerarioZonaRepository.query(`
+      DECLARE @Mensaje AS  NVARCHAR(100)
       EXEC INSERTAR_ITINERARIO_ZONA
         @IdItinerario = @0,
         @IDzona =@1,
-        @MENSAJE =@mensaje OUTPUT
-      SELECT @Mensaje as message
+        @MENSAJE =@Mensaje OUTPUT
+      SELECT @Mensaje as message;
       `,[
         createItinerarioZonaDto.itinerarioId,
         createItinerarioZonaDto.zonaId,
@@ -47,15 +48,52 @@ export class ItinerarioZonaService {
     return ItinerarioZona;
   }
 
-  update(id: string, updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
-    return `This action updates a #${id} itinerarioZona`;
+  async update(updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
+    const result = await this.createItinerarioZonaRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC ACTUALIZAR_ITINERARIO_ZONA
+          @IDITINERARIO_VIEJO = @0 ,
+          @IDZONA_VIEJO  = @1,
+          @IdItinerario  = @2,
+          @IDzona = @3 ,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        updateItinerarioZonaDto.itinerarioId,
+        updateItinerarioZonaDto.zonaId,
+        updateItinerarioZonaDto.idItinerarioNuevo,
+        updateItinerarioZonaDto.idZonaNueva,
+      ]);
+    return  ValidationService.verifiedResult(result, 'realizada');
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} itinerarioZona`;
+  async remove(deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+    const result = await this.createItinerarioZonaRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC ELIMINAR_ITINERARIOZONA
+          @IdItinerario = @0,
+          @IDzona =@1,
+          @MENSAJE =@MENSAJE OUTPUT
+      SELECT @MENSAJE AS message
+      `,[
+        deleteItinerarioZonaDto.idItinerario,
+        deleteItinerarioZonaDto.idZona,
+      ]);
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
-  restore(id: string) {
-    return `This action removes a #${id} itinerarioZona`;
+  async restore(restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+    const result = await this.createItinerarioZonaRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC ACTIVAR_ITINERARIOZONA
+          @IdItinerario = @0,
+          @IDzona = @1,
+          @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        restoreItinerarioZonaDto.idItinerario,
+        restoreItinerarioZonaDto.idZona,
+      ])
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 }

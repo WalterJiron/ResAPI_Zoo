@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { GuiaItinerarioService } from './guia-itinerario.service';
 import { CreateGuiaItinerarioDto } from './dto/create-guia-itinerario.dto';
 import { UpdateGuiaItinerarioDto } from './dto/update-guia-itinerario.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
+import { DeleteRestoreGuiaItinerarioDto } from './dto/delete-restore-guia-itinerario-dto';
 
 @Auth(Role.Admin)
 @Controller('guia-itinerario')
@@ -25,18 +26,18 @@ export class GuiaItinerarioController {
     return this.guiaItinerarioService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
-    return this.guiaItinerarioService.update(id, updateGuiaItinerarioDto);
+  @Patch()
+  update( @Body() updateGuiaItinerarioDto: UpdateGuiaItinerarioDto) {
+    return this.guiaItinerarioService.update(updateGuiaItinerarioDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.guiaItinerarioService.remove(id);
+  @Delete()
+  remove(@Body() deleteGuiaItinerarioDto: DeleteRestoreGuiaItinerarioDto) {
+    return this.guiaItinerarioService.remove(deleteGuiaItinerarioDto);
   }
 
-  @Delete('/activate/:id')
-  restore(@Param('id') id: string) {
-    return this.guiaItinerarioService.restore(id);
+  @Put('/activate')
+  restore(@Body() restoreGuiaItinerarioDto: DeleteRestoreGuiaItinerarioDto) {
+    return this.guiaItinerarioService.restore(restoreGuiaItinerarioDto);
   }
 }
