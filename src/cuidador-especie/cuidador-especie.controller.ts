@@ -2,9 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CuidadorEspecieService } from './cuidador-especie.service';
 import { CreateCuidadorEspecieDto } from './dto/create-cuidador-especie.dto';
 import { UpdateCuidadorEspecieDto } from './dto/update-cuidador-especie.dto';
+<<<<<<< HEAD
 import { SkipThrottle } from '@nestjs/throttler';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
+=======
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../auth/enums/role.enum';
+>>>>>>> f15210e (Guardando cambios antes de pull)
 
 @Auth(Role.Admin)
 @Controller('cuidador-especie')
