@@ -1,15 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { CuidadorEspecieService } from './cuidador-especie.service';
 import { CreateCuidadorEspecieDto } from './dto/create-cuidador-especie.dto';
 import { UpdateCuidadorEspecieDto } from './dto/update-cuidador-especie.dto';
-<<<<<<< HEAD
-import { SkipThrottle } from '@nestjs/throttler';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { Role } from 'src/auth/enums/role.enum';
-=======
 import { Auth } from '../auth/decorators/auth.decorator';
 import { Role } from '../auth/enums/role.enum';
->>>>>>> f15210e (Guardando cambios antes de pull)
+import { DeleteRestoreCuidadorEspecieDto } from './dto/delete-restore-cuidador-especie-dto';
 
 @Auth(Role.Admin)
 @Controller('cuidador-especie')
@@ -31,13 +26,19 @@ export class CuidadorEspecieController {
     return this.cuidadorEspecieService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
-    return this.cuidadorEspecieService.update(+id, updateCuidadorEspecieDto);
+  @Patch()
+  update( @Body() updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
+    return this.cuidadorEspecieService.update( updateCuidadorEspecieDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cuidadorEspecieService.remove(+id);
+  @Delete()
+  remove(@Body() deleteCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+    return this.cuidadorEspecieService.remove(deleteCuidadorEspecieDto); 
   }
+
+  @Put('/activate')
+  restore(@Body() restoreCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+    return this.cuidadorEspecieService.restore(restoreCuidadorEspecieDto);
+  }
+  
 }

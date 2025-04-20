@@ -1,18 +1,14 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+
 
 export class CreateCuidadorEspecieDto {
     @IsString()    
     idEmpleado: string;
-
-    @IsString()
-    idEmpleadoNuevo: string;
     
     @IsString()
     idEspecie: string;
 
-    @IsString()
-    idEspecieNuevo: string;
-
-    @IsDate()
+    @IsDateString()
+    @IsNotEmpty()
     fechaAsignacion: Date;
 }

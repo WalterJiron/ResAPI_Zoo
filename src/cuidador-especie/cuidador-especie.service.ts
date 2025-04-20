@@ -4,7 +4,8 @@ import { UpdateCuidadorEspecieDto } from './dto/update-cuidador-especie.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CuidadorEspecie } from './entities/cuidador-especie.entity';
 import { Repository } from 'typeorm';
-
+import { ValidationService } from '../common/validation.services';
+import {DeleteRestoreCuidadorEspecieDto} from './dto/delete-restore-cuidador-especie-dto';
 @Injectable()
 export class CuidadorEspecieService {
   constructor(
@@ -25,6 +26,8 @@ export class CuidadorEspecieService {
         createCuidadorEspecieDto.idEspecie,
         createCuidadorEspecieDto.fechaAsignacion,
       ]);
+
+      return ValidationService.verifiedResult(result, 'exito');
   }
 
   async findAll() {
@@ -49,11 +52,56 @@ export class CuidadorEspecieService {
 
 
 
-  async update(id: number, updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
-    return `This action updates a #${id} cuidadorEspecie`;
+  async update( updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
+    const result = await this.cuidadorEspecieRepository.query(`
+      DECLARE @MENSAJE AS VARCHAR(100)
+      EXEC Actualizar_Cuidador_Especie
+        @IDEMPLEADO_VIEJO = @0,
+        @IDESPECIE_VIEJO = @1,
+        @IdEmpleado = @2,
+        @IdEspecie = @3,
+        @FechaAsignacion = @4,
+        @MENSAJE = @MENSAJE OUTPUT
+      SELECT @MENSAJE AS message;
+      `,[
+        updateCuidadorEspecieDto.idEmpleado,
+        updateCuidadorEspecieDto.idEspecie,
+        updateCuidadorEspecieDto.idEmpleadoNuevo,
+        updateCuidadorEspecieDto.idEspecieNuevo,
+        updateCuidadorEspecieDto.fechaAsignacion
+      ]);
+
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} cuidadorEspecie`;
+async remove(deleteRestoreCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+    const result  = await this.cuidadorEspecieRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC Eliminar_CuidadorEspecie
+          @IdEmpleado = @0,
+          @IdEspecie = @1,
+          @MENSAJE = @MENSAJE OUTPUT 
+      SELECT @MENSAJE AS message
+      `,[
+        deleteRestoreCuidadorEspecieDto.idCuidador,
+        deleteRestoreCuidadorEspecieDto.idEspecie
+      ]
+      )
+    return ValidationService.verifiedResult(result, 'exito');
+  }
+
+  async restore(restoreCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+    const result  = await this.cuidadorEspecieRepository.query(`
+      DECLARE @MENSAJE AS NVARCHAR(100)
+      EXEC Activar_CuidadorEspecie
+          @IdEmpleado = @0,
+          @IdEspecie = @1,
+          @MENSAJE = @MENSAJE OUTPUT 
+      SELECT @MENSAJE AS message
+      `,[
+        restoreCuidadorEspecieDto.idCuidador,
+        restoreCuidadorEspecieDto.idEspecie
+      ])
+    return ValidationService.verifiedResult(result, 'exito');
   }
 }

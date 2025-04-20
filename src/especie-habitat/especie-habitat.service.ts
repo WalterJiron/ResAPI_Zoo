@@ -41,7 +41,7 @@ export class EspecieHabitatService {
 
   async findOne(id: string) {
     const especie_habitat = await this.especie_hbitatRepository.findOne({
-       where: { especieId : id}}
+        where: { especieId : id}}
       );
 
     if(!especie_habitat){
