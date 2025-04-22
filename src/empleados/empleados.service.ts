@@ -13,9 +13,10 @@ export class EmpleadosService {
     private readonly empleadoRepository: Repository<Empleado>
   ) { }
 
-  async create(createEmpleadoDto: CreateEmpleadoDto): Promise<{ message: string }> {
+  async create(createEmpleadoDto: CreateEmpleadoDto): Promise<{ message: string; code?: string }> {
     const result = await this.empleadoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100),  @CodigoEmpleado AS UNIQUEIDENTIFIER;
+
             EXEC INSERCCION_EMPLEADO
               @PrimerNE = @0,
               @SegundoNE = @1,
@@ -26,8 +27,10 @@ export class EmpleadosService {
               @EMAIL = @6,
               @FECHAINGRE @7,
               @IdCargo @8,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
+              @MENSAJE = @Mensaje OUTPUT,
+              @CodigoEmpleado = @CodigoEmpleado OUTPUT;
+
+            SELECT @Mensaje AS message, @CodigoEmpleado AS code;
       `, [
       createEmpleadoDto.pne,
       createEmpleadoDto.sne,
@@ -40,7 +43,7 @@ export class EmpleadosService {
       createEmpleadoDto.idCargo,
     ]);
 
-    return ValidationService.verifiedResult(result, 'exito');
+    return ValidationService.verifiedResultForID(result, 'exito');
   }
 
   async findAll() {
@@ -63,9 +66,10 @@ export class EmpleadosService {
     return empleado;
   }
 
-  async update(id: string, updateEmpleadoDto: UpdateEmpleadoDto) {
+  async update(id: string, updateEmpleadoDto: UpdateEmpleadoDto): Promise<{ message: string }> {
     const result = await this.empleadoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC UPDATE_EMPLEADO
               @CDE = @0,
               @PrimerNE = @1,
@@ -77,8 +81,9 @@ export class EmpleadosService {
               @EMAIL = @7,
               @FECHAINGRE @8,
               @IdCargo @9,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
+              @MENSAJE = @Mensaje OUTPUT;
+
+            SELECT @Mensaje AS message;
       `, [
       id,
       updateEmpleadoDto.pne,
@@ -95,30 +100,32 @@ export class EmpleadosService {
     return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<{ message: string }> {
     const result = await this.empleadoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC ELIMINAR_EMPLEADO
               @CDE = @0,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
-      `, [
-      id,
-    ]);
+              @MENSAJE = @Mensaje OUTPUT;
+            
+              SELECT @Mensaje AS message;
+      `, [id]
+    );
 
     return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async restore(id: string) {
+  async restore(id: string): Promise<{ message: string }> {
     const result = await this.empleadoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC ACTIVAREMPLEADO
               @CDE = @0,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
-      `, [
-      id,
-    ]);
+              @MENSAJE = @Mensaje OUTPUT;
+
+            SELECT @Mensaje AS message;
+      `, [id]
+    );
 
     return ValidationService.verifiedResult(result, 'exito');
   }

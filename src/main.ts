@@ -8,14 +8,17 @@ async function bootstrap() {
 
   app.set('trust proxy', 'loopback'); 
 
+  // Permisos
   app.enableCors({
-    origin: 'http://localhost:5173', // Permitir solo este origen
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
+    origin: 'http://localhost:5173', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Permitir credenciales
   });
 
 
+  // Configuración de la carpeta pulica
   app.useGlobalPipes(
+    // Para las validaciones
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,

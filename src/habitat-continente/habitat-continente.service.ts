@@ -14,14 +14,16 @@ export class HabitatContinenteService {
     private readonly habitatContinenteRepository: Repository<HabitatContinente>,
   ) { }
 
-  async create(createHabitadContinenteDto: CreateHabitatContinenteDto) {
+  async create(createHabitadContinenteDto: CreateHabitatContinenteDto): Promise<{message: string}> {
     const result = await this.habitatContinenteRepository.query(`
-      DECLARE @Mensaje as NVARCHAR(100)
-      EXEC Insertar_HabitadContinente
-        @Habitad = @0,
-        @CONTINENTE = @1,
-        @MENSAJE =@Mensaje OUTPUT
-      SELECT @Mensaje as message;
+              DECLARE @Mensaje as NVARCHAR(100);
+
+              EXEC Insertar_HabitadContinente
+                @Habitad = @0,
+                @CONTINENTE = @1,
+                @MENSAJE =@Mensaje OUTPUT;
+
+              SELECT @Mensaje as message;
       `,[
         createHabitadContinenteDto.habitatId,
         createHabitadContinenteDto.continenteId,
@@ -49,52 +51,62 @@ export class HabitatContinenteService {
     return habitad_continente;
   }
 
-  async update( updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
+  async update(updateHabitatContinenteDto: UpdateHabitatContinenteDto): Promise<{ message: string }> {
     const result = await this.habitatContinenteRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC  Update_HabitatContinente
-            @Habitad =@0,
-            @CONTINENTE =@1,
-            @HabitadVieja =@2,
-            @CONTINENTE_VIEJO =@3,
-            @MENSAJE =@MENSAJE OUTPUT
-      SELECT @MENSAJE AS message;
+                DECLARE @MENSAJE AS NVARCHAR(100);
+
+                EXEC  Update_HabitatContinente
+                      @Habitad =@0,
+                      @CONTINENTE =@1,
+                      @HabitadVieja =@2,
+                      @CONTINENTE_VIEJO =@3,
+                      @MENSAJE =@MENSAJE OUTPUT;
+
+                SELECT @MENSAJE AS message;
       `,[
         updateHabitatContinenteDto.idHabitadNueva,
         updateHabitatContinenteDto.idContinenteNuevo,
         updateHabitatContinenteDto.habitatId,
         updateHabitatContinenteDto.continenteId,
-      ])
+      ]);
+
     return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async remove(deleteEspecieHabitatDto: DeleteRestoreHabitadContinenteDto) {
+  async remove(deleteEspecieHabitatDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
     const result = await this.habitatContinenteRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC Eliminar_HabitatContinente
-            @Habitat = @0,
-            @Cont = @1,
-            @MENSAJE = @MENSAJE OUTPUT
-      SELECT @MENSAJE AS message;
+              DECLARE @MENSAJE AS NVARCHAR(100);
+
+              EXEC Eliminar_HabitatContinente
+                    @Habitat = @0,
+                    @Cont = @1,
+                    @MENSAJE = @MENSAJE OUTPUT;
+
+              SELECT @MENSAJE AS message;
       `,[
         deleteEspecieHabitatDto.idHabitat,
         deleteEspecieHabitatDto.idContinente,
       ]);
+
     return ValidationService.verifiedResult(result, 'desactivada');
   }
 
-  async restore(restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto) {
+  async restore(restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
     const result = await this.habitatContinenteRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC Activar_HabitatContinente
-          @Habitat = @0 ,
-          @Cont = @1,
-          @MENSAJE = @MENSAJE OUTPUT
-      SELECT @MENSAJE AS message;
+              DECLARE @MENSAJE AS NVARCHAR(100);
+
+              EXEC Activar_HabitatContinente
+                  @Habitat = @0 ,
+                  @Cont = @1,
+                  @MENSAJE = @MENSAJE OUTPUT;
+
+              SELECT @MENSAJE AS message;
       `,[
         restoreHabitadContinenteDto.idHabitat,
         restoreHabitadContinenteDto.idContinente,
-      ])
+      ]);
+
     return ValidationService.verifiedResult(result, 'activada');
   }
+  
 }

@@ -15,12 +15,14 @@ export class CargosService {
 
   async create(createCargoDto: CreateCargoDto): Promise<{ message: string }> {
     const result = await this.cargoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC Insertar_Cargo
               @NombreC = @0,
               @DescripcionC = @1,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
+              @MENSAJE = @Mensaje OUTPUT;
+
+            SELECT @Mensaje AS message;
       `, [
       createCargoDto.nombreCargo,
       createCargoDto.descripCargo
@@ -52,18 +54,20 @@ export class CargosService {
 
   async update(id: string, updateCargoDto: UpdateCargoDto): Promise<{ message: string }> {
     const result = await this.cargoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC UPDATE_CARGO
               @CDC = @0,
               @NombreC = @1,
               @DescripcionC = @2,
-              @MENSAJE = @Mensaje OUTPUT
+              @MENSAJE = @Mensaje OUTPUT;
+
             SELECT @Mensaje AS message
       `, [
-      id,
-      updateCargoDto.nombreCargo,
-      updateCargoDto.descripCargo
-    ]
+        id,
+        updateCargoDto.nombreCargo,
+        updateCargoDto.descripCargo
+      ]
     );
 
     return ValidationService.verifiedResult(result, 'exito');
@@ -71,11 +75,13 @@ export class CargosService {
 
   async remove(id: string): Promise<{ message: string }> {
     const result = await this.cargoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC UPDATE_CARGO
               @CDC = @0,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
+              @MENSAJE = @Mensaje OUTPUT;
+
+            SELECT @Mensaje AS message;
       `, [id]
     );
 
@@ -84,11 +90,13 @@ export class CargosService {
 
   async restore(id: string): Promise<{ message: string }> {
     const result = await this.cargoRepository.query(`
-            DECLARE @Mensaje AS VARCHAR(100)
+            DECLARE @Mensaje AS VARCHAR(100);
+
             EXEC ACTIVAR_CARGO
               @CDC = @0,
-              @MENSAJE = @Mensaje OUTPUT
-            SELECT @Mensaje AS message
+              @MENSAJE = @Mensaje OUTPUT;
+
+            SELECT @Mensaje AS message;
       `, [id]
     );
 

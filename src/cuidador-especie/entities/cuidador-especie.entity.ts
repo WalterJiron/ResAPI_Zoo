@@ -18,7 +18,7 @@ export class CuidadorEspecie {
     @JoinColumn({ name: 'IdEspecie' })
     especie: Especie;
 
-    @PrimaryColumn({ name:'FechaAsignacion', type: 'date', nullable: false })  
+    @Column({ name:'FechaAsignacion', type: 'date', nullable: false })  
     fechaAsignacion: Date;
 
     @CreateDateColumn({

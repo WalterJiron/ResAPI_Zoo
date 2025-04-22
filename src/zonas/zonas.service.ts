@@ -45,7 +45,7 @@ export class ZonasService {
     const zona = await this.zonaRepository.findOne({ where: { codigoZona: id } });
 
     if (!zona) {
-      throw new NotFoundException(`La zona con el codigo: ${id} no existe en la base de datos.`);
+      throw new BadRequestException(`La zona con el codigo: ${id} no existe en la base de datos.`);
     }
 
     return zona;
@@ -70,7 +70,7 @@ export class ZonasService {
     return ValidationService.verifiedResult(result, 'correctamente');
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<{ message: string }> {
     const result = await this.zonaRepository.query(`
             DECLARE @Mensaje AS NVARCHAR(100)
             EXEC ProcDeleteZona
@@ -82,7 +82,7 @@ export class ZonasService {
     return ValidationService.verifiedResult(result, 'correctamente');
   }
 
-  async restore(id: string) {
+  async restore(id: string): Promise<{ message: string }> {
     const result = await this.zonaRepository.query(`
             DECLARE @Mensaje AS NVARCHAR(100)
             EXEC ProcRestoreZona
@@ -93,4 +93,5 @@ export class ZonasService {
 
     return ValidationService.verifiedResult(result, 'correctamente');
   }
+
 }

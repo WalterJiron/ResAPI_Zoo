@@ -5,14 +5,15 @@ import { UpdateItinerarioZonaDto } from './dto/update-itinerario-zona.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { DeleteRestoreItinerarioZonaDto } from './dto/delete-restore-itinerario-zona-dto';
+import { ItinerarioZona } from './entities/itinerario-zona.entity';
 
 @Auth(Role.Admin)
 @Controller('itinerario-zona')
 export class ItinerarioZonaController {
-  constructor(private readonly itinerarioZonaService: ItinerarioZonaService) {}
+  constructor(private readonly itinerarioZonaService: ItinerarioZonaService) { }
 
   @Post()
-  create(@Body() createItinerarioZonaDto: CreateItinerarioZonaDto) {
+  create(@Body() createItinerarioZonaDto: CreateItinerarioZonaDto): Promise<{ message: string }> {
     return this.itinerarioZonaService.create(createItinerarioZonaDto);
   }
 
@@ -27,17 +28,17 @@ export class ItinerarioZonaController {
   }
 
   @Patch()
-  update( @Body() updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
+  update(@Body() updateItinerarioZonaDto: UpdateItinerarioZonaDto): Promise<{ message: string }> {
     return this.itinerarioZonaService.update(updateItinerarioZonaDto);
   }
 
   @Delete()
-  remove(@Body() deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+  remove(@Body() deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{ message: string }> {
     return this.itinerarioZonaService.remove(deleteItinerarioZonaDto);
   }
 
   @Put('/activate')
-  restore(@Body() restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+  restore(@Body() restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{ message: string }> {
     return this.itinerarioZonaService.restore(restoreItinerarioZonaDto);
   }
 }

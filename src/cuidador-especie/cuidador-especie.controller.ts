@@ -12,7 +12,7 @@ export class CuidadorEspecieController {
   constructor(private readonly cuidadorEspecieService: CuidadorEspecieService) {}
 
   @Post()
-  create(@Body() createCuidadorEspecieDto: CreateCuidadorEspecieDto) {
+  create(@Body() createCuidadorEspecieDto: CreateCuidadorEspecieDto): Promise<{ message: string}> {
     return this.cuidadorEspecieService.create(createCuidadorEspecieDto);
   }
 
@@ -27,17 +27,17 @@ export class CuidadorEspecieController {
   }
 
   @Patch()
-  update( @Body() updateCuidadorEspecieDto: UpdateCuidadorEspecieDto) {
+  update( @Body() updateCuidadorEspecieDto: UpdateCuidadorEspecieDto): Promise<{ message: string}> {
     return this.cuidadorEspecieService.update( updateCuidadorEspecieDto);
   }
 
   @Delete()
-  remove(@Body() deleteCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+  remove(@Body() deleteCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto): Promise<{ message: string}> {
     return this.cuidadorEspecieService.remove(deleteCuidadorEspecieDto); 
   }
 
   @Put('/activate')
-  restore(@Body() restoreCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto) {
+  restore(@Body() restoreCuidadorEspecieDto: DeleteRestoreCuidadorEspecieDto): Promise<{ message: string}> {
     return this.cuidadorEspecieService.restore(restoreCuidadorEspecieDto);
   }
   

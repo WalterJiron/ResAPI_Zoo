@@ -5,8 +5,9 @@ import {
 import { EspecieService } from './especie.service';
 import { CreateEspecieDto } from './dto/create-especie.dto';
 import { UpdateEspecieDto } from './dto/update-especie.dto';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { Role } from 'src/auth/enums/role.enum';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../auth/enums/role.enum';
+import { Especie } from './entities/especie.entity';
 
 @Auth(Role.Admin)
 @Controller('especie')
@@ -17,7 +18,7 @@ export class EspecieController {
 
 
   @Post()
-  async create(@Body() createEspecieDto: CreateEspecieDto) {
+  async create(@Body() createEspecieDto: CreateEspecieDto): Promise<{ message: string, code?: string }> {
     return this.especieService.create(createEspecieDto);
   }
 
@@ -29,25 +30,25 @@ export class EspecieController {
 
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string){
     return this.especieService.findOne(id);
   }
 
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateEspecieDto: UpdateEspecieDto) {
+  async update(@Param('id') id: string, @Body() updateEspecieDto: UpdateEspecieDto): Promise<{ message: string }> {
     return this.especieService.update(id, updateEspecieDto);
   }
 
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
     return this.especieService.remove(id);
   }
 
 
-  @Put('/Activate/:id')
-  async restore(@Param('id') id: string) {
+  @Put('/activate/:id')
+  async restore(@Param('id') id: string): Promise<{ message: string }> {
     return this.especieService.restore(id);
   }
 }

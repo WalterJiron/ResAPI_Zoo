@@ -18,8 +18,4 @@ export class CreateItinerarioDto {
 
     @IsString()
     horaInicio: string;   // Format: 'HH:mm:ss'
-
-    @IsBoolean()
-    @IsOptional()
-    estado?: boolean;
 }

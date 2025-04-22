@@ -17,19 +17,19 @@ export class ItinerariosService {
   async create(createItinerarioDto: CreateItinerarioDto): Promise<{ message: string; code?: string }> {
     try {
       const result = await this.itinerarioRepository.query(`
-          DECLARE @MensajeOUT VARCHAR(100), @IdOUT UNIQUEIDENTIFIER;
+                DECLARE @MensajeOUT VARCHAR(100), @IdOUT UNIQUEIDENTIFIER;
 
-          EXEC ProcInsertItinerario
-            @Duracion = @0,
-            @Longitud = @1,
-            @MaxVisitantes = @2,
-            @NumEspecies = @3,
-            @Fecha = @4,
-            @Hora = @5,
-            @Mensaje = @MensajeOUT OUTPUT,
-            @NuevoIdItinerario = @IdOUT OUTPUT;
+                EXEC ProcInsertItinerario
+                  @Duracion = @0,
+                  @Longitud = @1,
+                  @MaxVisitantes = @2,
+                  @NumEspecies = @3,
+                  @Fecha = @4,
+                  @Hora = @5,
+                  @Mensaje = @MensajeOUT OUTPUT,
+                  @NuevoIdItinerario = @IdOUT OUTPUT;
 
-          SELECT @MensajeOUT AS message, CAST(@IdOUT AS VARCHAR(36)) AS code;
+                SELECT @MensajeOUT AS message, CAST(@IdOUT AS VARCHAR(36)) AS code;
         `,
         [
           ValidationService.formatTime(createItinerarioDto.duracion),
@@ -49,8 +49,7 @@ export class ItinerariosService {
     }
   }
 
-
-  async findAll(): Promise<Itinerario[]> {
+  async findAll() {
     try {
       const itinerarios = await this.itinerarioRepository.find({
         order: { fecha: 'ASC', horaInicio: 'ASC' }, // Ordenar por fecha y hora
@@ -68,7 +67,7 @@ export class ItinerariosService {
 
   }
 
-  async findOne(id: string): Promise<Itinerario> {
+  async findOne(id: string) {
     try {
       const itinerario = await this.itinerarioRepository.findOne({
         where: { codigoIti: id },
@@ -86,14 +85,63 @@ export class ItinerariosService {
     }
   }
 
+  async update(id: string, updateItinerarioDto: UpdateItinerarioDto): Promise<{ message: string }> {
+    const result = await this.itinerarioRepository.query(`
+              DECLARE @Mensaje VARCHAR(100);
 
-  async update(id: string, updateItinerarioDto: UpdateItinerarioDto) {
-    return 'HUY SKIBIDI ;[';
+              EXEC ProcUpdateItinerario
+                @CodigoItinerario = @0,
+                @Duracion = @1,
+                @Longitud = @2,
+                @MaxVisitantes = @3,
+                @NumEspecies = @4,
+                @Fecha = @5,
+                @Hora = @6,
+                @Mensaje = @Mensaje OUTPUT;
+
+              SELECT @Mensaje AS message;
+      `, [
+      id,
+      ValidationService.formatTime(updateItinerarioDto.duracion!),
+      updateItinerarioDto.longitud,
+      updateItinerarioDto.maxVisitantes,
+      updateItinerarioDto.numEspecies,
+      updateItinerarioDto.fecha,
+      ValidationService.formatTime(updateItinerarioDto.horaInicio!),
+    ]
+    );
+
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
+  async remove(id: string): Promise<{ message: string }> {
+    const result = await this.itinerarioRepository.query(`
+              DECLARE @Mensaje VARCHAR(100);
 
-  async remove(id: string) {
-    return 'pipipi'
+              EXEC ProcDeleteItinerario
+                @CodigoItinerario = @0,
+                @Mensaje = @Mensaje OUTPUT;
+              
+              SELECT @Mensaje AS message;
+      `, [id]
+    );
+
+    return ValidationService.verifiedResult(result, 'correctamente');
+  }
+
+  async restore(id: string): Promise<{ message: string }> {
+    const result = await this.itinerarioRepository.query(`
+              DECLARE @Mensaje VARCHAR(100);
+
+              EXEC ProcRestoreItinerario 
+                @CodigoItinerario = @0,
+                @Mensaje = @Mensaje OUTPUT;
+              
+              SELECT @Mensaje AS message;
+      `, [id]
+    );
+
+    return ValidationService.verifiedResult(result, 'correctamente');
   }
 
 }

@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/
 import { EspecieHabitatService } from './especie-habitat.service';
 import { CreateEspecieHabitatDto } from './dto/create-especie-habitat.dto';
 import { UpdateEspecieHabitatDto } from './dto/update-especie-habitat.dto';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { Role } from 'src/auth/enums/role.enum';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../auth/enums/role.enum';
 import { DeleteRestoreEspecieHabitatDto } from './dto/delete-restore-especie-habitad-dto';
+import { EspecieHabitat } from './entities/especie-habitat.entity';
 
 @Auth(Role.Admin)
 @Controller('especi-habitat')
@@ -12,7 +13,7 @@ export class EspecieHabitatController {
   constructor(private readonly especieHabitatService: EspecieHabitatService) {}
 
   @Post()
-  create(@Body() createEspecieHabitatDto: CreateEspecieHabitatDto) {
+  create(@Body() createEspecieHabitatDto: CreateEspecieHabitatDto): Promise<{message: string}> {
     return this.especieHabitatService.create(createEspecieHabitatDto);
   }
 
@@ -27,18 +28,18 @@ export class EspecieHabitatController {
   }
 
   @Patch()
-  update( @Body() updateEspecieHabitatDto: UpdateEspecieHabitatDto) {
+  update( @Body() updateEspecieHabitatDto: UpdateEspecieHabitatDto): Promise<{message: string}> {
     return this.especieHabitatService.update(updateEspecieHabitatDto);
   }
 
   @Delete()
-  remove(@Body() deleteEspecieHabitatDto: DeleteRestoreEspecieHabitatDto){
+  remove(@Body() deleteEspecieHabitatDto: DeleteRestoreEspecieHabitatDto): Promise<{message: string}>{
     return this.especieHabitatService.remove(deleteEspecieHabitatDto);
   }
   
 
   @Put('/activate')
-  restore(@Body() RestoreEspecieHabitatDto: DeleteRestoreEspecieHabitatDto) {
+  restore(@Body() RestoreEspecieHabitatDto: DeleteRestoreEspecieHabitatDto): Promise<{message: string}> {
     return this.especieHabitatService.restore(RestoreEspecieHabitatDto);
   }
 }

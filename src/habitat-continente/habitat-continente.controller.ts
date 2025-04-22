@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Put } fro
 import { HabitatContinenteService } from './habitat-continente.service';
 import { CreateHabitatContinenteDto } from './dto/create-habitat-continente.dto';
 import { UpdateHabitatContinenteDto } from './dto/update-habitat-continente.dto';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { Role } from 'src/auth/enums/role.enum';
-import { DeleteRestoreCuidadorEspecieDto } from 'src/cuidador-especie/dto/delete-restore-cuidador-especie-dto';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Role } from '../auth/enums/role.enum';
 import { DeleteRestoreHabitadContinenteDto } from './dto/delete-restore-habitad-continente-dto';
+import { HabitatContinente } from './entities/habitat-continente.entity';
 
 @Auth(Role.Admin)
 @Controller('habitat-continente')
@@ -13,7 +13,7 @@ export class HabitatContinenteController {
   constructor(private readonly habitatContinenteService: HabitatContinenteService) {}
 
   @Post()
-  create(@Body() createHabitatContinenteDto: CreateHabitatContinenteDto) {
+  create(@Body() createHabitatContinenteDto: CreateHabitatContinenteDto): Promise<{ message: string }> {
     return this.habitatContinenteService.create(createHabitatContinenteDto);
   }
 
@@ -28,17 +28,17 @@ export class HabitatContinenteController {
   }
 
   @Patch()
-  update( @Body() updateHabitatContinenteDto: UpdateHabitatContinenteDto) {
+  update( @Body() updateHabitatContinenteDto: UpdateHabitatContinenteDto): Promise<{message: string}> {
     return this.habitatContinenteService.update( updateHabitatContinenteDto);
   }
 
   @Delete()
-  remove(@Body() deleteHabitatContinenteDto: DeleteRestoreHabitadContinenteDto) {
+  remove(@Body() deleteHabitatContinenteDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
     return this.habitatContinenteService.remove(deleteHabitatContinenteDto);
   }
 
   @Put('/activate')
-  restore(@Body() restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto) {
+  restore(@Body() restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
     return this.habitatContinenteService.restore(restoreHabitadContinenteDto);
   }
 }

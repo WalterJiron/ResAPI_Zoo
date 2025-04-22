@@ -13,15 +13,18 @@ export class EspecieService {
     private readonly especieRepository: Repository<Especie>,
   ) { }
 
-  async create(createEspecieDto: CreateEspecieDto): Promise<{ message: string }> {
+  async create(createEspecieDto: CreateEspecieDto): Promise<{ message: string; code?: string }> {
     const result = await this.especieRepository.query(`
-          DECLARE @Mensaje AS NVARCHAR(100)
+          DECLARE @Mensaje AS NVARCHAR(100), @CodigoEspecie AS UNIQUEIDENTIFIER;
+
           EXEC ProcInsertEspecie
             @Nombre = @0,
             @NombreCientifico = @1,
             @Descripcion = @2,
-            @Mensaje = @Mensaje OUTPUT
-          SELECT @Mensaje AS message;
+            @Mensaje = @Mensaje OUTPUT,
+            @IDEspecie = @CodigoEspecie OUTPUT;
+
+          SELECT @Mensaje AS message, @CodigoEspecie AS code;
       `, [
       createEspecieDto.nombre,
       createEspecieDto.nameCientifico,
@@ -29,7 +32,7 @@ export class EspecieService {
     ]
     );
 
-    return ValidationService.verifiedResult(result, 'correctamente');
+    return ValidationService.verifiedResultForID(result, 'correctamente');
   }
 
   async findAll() {
@@ -56,13 +59,15 @@ export class EspecieService {
 
   async update(id: string, updateEspecieDto: UpdateEspecieDto): Promise<{ message: string }> {
     const result = await this.especieRepository.query(`
-            DECLARE @Mensaje AS NVARCHAR(100)
+            DECLARE @Mensaje AS NVARCHAR(100);
+
             EXEC ProcUpdateEspecie
                 @CodigoEspecie = @0,
                 @NuevoNombre = @1,
                 @NuevoCientifico @2,
                 @NuevaDescripcion @3,
-                @Mensaje = @Mensaje OUTPUT
+                @Mensaje = @Mensaje OUTPUT;
+
             SELECT @Mensaje AS message;
       `, [
       id,
@@ -76,10 +81,12 @@ export class EspecieService {
 
   async remove(id: string): Promise<{ message: string }> {
     const result = await this.especieRepository.query(`
-              DECLARE @Mensaje AS NVARCHAR(100)
+              DECLARE @Mensaje AS NVARCHAR(100);
+
               EXEC ProcDeleteEspecie 
                   @CodigoEspecie = @0,
-                  @Mensaje = @Mensaje OUTPUT
+                  @Mensaje = @Mensaje OUTPUT;
+
               SELECT @Mensaje AS message;
       `, [id]);
 
@@ -88,13 +95,16 @@ export class EspecieService {
 
   async restore(id: string): Promise<{ message: string }> {
     const result = await this.especieRepository.query(`
-              DECLARE @Mensaje AS NVARCHAR(100)
+              DECLARE @Mensaje AS NVARCHAR(100);
+
               EXEC ProcRestoreEspecie
                   @CodigoEspecie = @0,
-                  @Mensaje = @Mensaje OUTPUT
+                  @Mensaje = @Mensaje OUTPUT;
+
               SELECT @Mensaje AS message;
       `, [id]);
 
     return ValidationService.verifiedResult(result, 'correctamente');
   }
+
 }

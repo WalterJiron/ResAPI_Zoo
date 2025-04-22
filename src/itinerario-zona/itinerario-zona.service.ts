@@ -13,14 +13,16 @@ export class ItinerarioZonaService {
     @InjectRepository(ItinerarioZona)
       private readonly createItinerarioZonaRepository: Repository<ItinerarioZona>, ){ }
 
-  async create(createItinerarioZonaDto: CreateItinerarioZonaDto) {
+  async create(createItinerarioZonaDto: CreateItinerarioZonaDto): Promise<{message: string}> {
     const itinerarioZona = await this.createItinerarioZonaRepository.query(`
-      DECLARE @Mensaje AS  NVARCHAR(100)
-      EXEC INSERTAR_ITINERARIO_ZONA
-        @IdItinerario = @0,
-        @IDzona =@1,
-        @MENSAJE =@Mensaje OUTPUT
-      SELECT @Mensaje as message;
+              DECLARE @Mensaje AS  NVARCHAR(100);
+
+              EXEC INSERTAR_ITINERARIO_ZONA
+                @IdItinerario = @0,
+                @IDzona =@1,
+                @MENSAJE =@Mensaje OUTPUT;
+
+              SELECT @Mensaje as message;
       `,[
         createItinerarioZonaDto.itinerarioId,
         createItinerarioZonaDto.zonaId,
@@ -48,16 +50,18 @@ export class ItinerarioZonaService {
     return ItinerarioZona;
   }
 
-  async update(updateItinerarioZonaDto: UpdateItinerarioZonaDto) {
+  async update(updateItinerarioZonaDto: UpdateItinerarioZonaDto): Promise<{message: string}> {
     const result = await this.createItinerarioZonaRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC ACTUALIZAR_ITINERARIO_ZONA
-          @IDITINERARIO_VIEJO = @0 ,
-          @IDZONA_VIEJO  = @1,
-          @IdItinerario  = @2,
-          @IDzona = @3 ,
-          @MENSAJE = @MENSAJE OUTPUT
-      SELECT @MENSAJE AS message;
+              DECLARE @MENSAJE AS NVARCHAR(100);
+
+              EXEC ACTUALIZAR_ITINERARIO_ZONA
+                  @IDITINERARIO_VIEJO = @0 ,
+                  @IDZONA_VIEJO  = @1,
+                  @IdItinerario  = @2,
+                  @IDzona = @3 ,
+                  @MENSAJE = @MENSAJE OUTPUT;
+
+              SELECT @MENSAJE AS message;
       `,[
         updateItinerarioZonaDto.itinerarioId,
         updateItinerarioZonaDto.zonaId,
@@ -67,14 +71,16 @@ export class ItinerarioZonaService {
     return  ValidationService.verifiedResult(result, 'realizada');
   }
 
-  async remove(deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+  async remove(deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{message: string}> {
     const result = await this.createItinerarioZonaRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC ELIMINAR_ITINERARIOZONA
-          @IdItinerario = @0,
-          @IDzona =@1,
-          @MENSAJE =@MENSAJE OUTPUT
-      SELECT @MENSAJE AS message
+              DECLARE @MENSAJE AS NVARCHAR(100);
+
+              EXEC ELIMINAR_ITINERARIOZONA
+                  @IdItinerario = @0,
+                  @IDzona =@1,
+                  @MENSAJE =@MENSAJE OUTPUT;
+
+              SELECT @MENSAJE AS message
       `,[
         deleteItinerarioZonaDto.idItinerario,
         deleteItinerarioZonaDto.idZona,
@@ -82,18 +88,21 @@ export class ItinerarioZonaService {
     return ValidationService.verifiedResult(result, 'correctamente');
   }
 
-  async restore(restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto) {
+  async restore(restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{message: string}> {
     const result = await this.createItinerarioZonaRepository.query(`
-      DECLARE @MENSAJE AS NVARCHAR(100)
-      EXEC ACTIVAR_ITINERARIOZONA
-          @IdItinerario = @0,
-          @IDzona = @1,
-          @MENSAJE = @MENSAJE OUTPUT
-      SELECT @MENSAJE AS message;
+              DECLARE @MENSAJE AS NVARCHAR(100);
+
+              EXEC ACTIVAR_ITINERARIOZONA
+                  @IdItinerario = @0,
+                  @IDzona = @1,
+                  @MENSAJE = @MENSAJE OUTPUT;
+
+              SELECT @MENSAJE AS message;
       `,[
         restoreItinerarioZonaDto.idItinerario,
         restoreItinerarioZonaDto.idZona,
       ])
     return ValidationService.verifiedResult(result, 'correctamente');
   }
+  
 }
