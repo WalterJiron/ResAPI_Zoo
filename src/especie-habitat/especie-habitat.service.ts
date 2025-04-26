@@ -35,7 +35,7 @@ export class EspecieHabitatService {
   async findAll() {
     const especies_habitats = await this.especie_hbitatRepository.find();
 
-    if(!especies_habitats){
+    if(!especies_habitats.length){
       throw new NotFoundException('No se encontraron uniones.');
     }
 

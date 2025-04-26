@@ -34,7 +34,7 @@ export class ItinerarioZonaService {
   async findAll() {
     const ItinerarioZonas = await this.createItinerarioZonaRepository.find();
 
-    if(!ItinerarioZonas){
+    if(!ItinerarioZonas.length){
       throw new NotFoundException('No se encontraron relaciones');
     } 
     return ItinerarioZonas;

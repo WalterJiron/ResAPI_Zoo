@@ -34,7 +34,7 @@ export class RolesService {
   async findAll() {
     const roles = await this.rolRepository.find();
 
-    if(!roles) {
+    if(!roles.length) {
       throw new NotFoundException('No existen roles');
     }
 

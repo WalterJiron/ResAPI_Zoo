@@ -21,6 +21,7 @@ import { HabitatContinenteModule } from './habitat-continente/habitat-continente
 import { GuiaItinerarioModule } from './guia-itinerario/guia-itinerario.module';
 import { ItinerarioZonaModule } from './itinerario-zona/itinerario-zona.module';
 import { CuidadorEspecieModule } from './cuidador-especie/cuidador-especie.module';
+import { DetalleEmpleadoModule } from './detalle-empleado/detalle-empleado.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CuidadorEspecieModule } from './cuidador-especie/cuidador-especie.modul
           ttl: 60000,
           blockDuration: 60000, // Bloqueo por 1 minuto
         },
+        
         // Configuración específica para login (5 intentos cada 10 minutos)
         {
           ttl: 60000,    // 1 minuto (en ms)
@@ -97,24 +99,12 @@ import { CuidadorEspecieModule } from './cuidador-especie/cuidador-especie.modul
 
     ItinerarioZonaModule,
 
-    CuidadorEspecieModule
+    CuidadorEspecieModule,
+
+    DetalleEmpleadoModule
   ],
 
   providers: [
-    /*
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,  // Guard de autenticación global
-    },
-    {
-      provide:APP_GUARD,
-      useClass: RolesGuard,  // Para los permisos de las rutas
-    }
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerBehindProxyGuard,
-    },
-    */
     {
       provide: APP_GUARD,
       useClass: ThrottlerBehindProxyGuard

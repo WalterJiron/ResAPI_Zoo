@@ -55,7 +55,7 @@ export class ItinerariosService {
         order: { fecha: 'ASC', horaInicio: 'ASC' }, // Ordenar por fecha y hora
       });
 
-      if (!itinerarios) {
+      if (!itinerarios.length) {
         throw new NotFoundException('No existen itinerarios');
       }
 

@@ -36,7 +36,7 @@ export class CuidadorEspecieService {
   async findAll() {
     const cuidadoresEspecies = await this.cuidadorEspecieRepository.find();
 
-    if (!cuidadoresEspecies) {
+    if (!cuidadoresEspecies.length) {
       throw new NotFoundException('No se encontraron cuidadores de especies');
     }
 
@@ -52,8 +52,6 @@ export class CuidadorEspecieService {
 
     return cuidadorEspecie;
   }
-
-
 
   async update(updateCuidadorEspecieDto: UpdateCuidadorEspecieDto): Promise<{ message: string }> {
     const result = await this.cuidadorEspecieRepository.query(`

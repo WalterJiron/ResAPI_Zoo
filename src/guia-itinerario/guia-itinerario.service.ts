@@ -33,13 +33,13 @@ export class GuiaItinerarioService {
     return ValidationService.verifiedResult(Result, 'correctamente');
   }
   async findAll(){
-    const GuiaItinerario = await this.GuiaItinerarioRepository.find();
+    const GuiaItinerarios = await this.GuiaItinerarioRepository.find();
 
-    if (!GuiaItinerario) {
+    if (!GuiaItinerarios.length) {
       throw new NotFoundException(`No se encontro la relacion`);
     }
 
-    return GuiaItinerario;
+    return GuiaItinerarios;
   }
 
   async findOne(id: string) {

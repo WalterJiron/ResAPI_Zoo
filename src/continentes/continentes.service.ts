@@ -13,7 +13,7 @@ export class ContinentesService {
   async findAll() {
     const continentes = await this.continenteRepositori.find();
 
-    if (!continentes){
+    if (!continentes.length){
       throw new NotFoundException('No existen continentes.');
     }
 

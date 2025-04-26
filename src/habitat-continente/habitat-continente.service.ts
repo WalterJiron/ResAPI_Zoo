@@ -35,7 +35,7 @@ export class HabitatContinenteService {
   async findAll() {
     const habitad_continentes = await this.habitatContinenteRepository.find();
 
-    if(!habitad_continentes){
+    if(!habitad_continentes.length){
       throw new NotFoundException('No se encontro la relacion');
     }
 

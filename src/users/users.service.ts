@@ -41,7 +41,7 @@ export class UsersService {
   async findAll() {
     const users = await this.userRepository.find();
 
-    if (!users) {
+    if (!users.length) {
       throw new NotFoundException('No existen usuarios');
     }
 

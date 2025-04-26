@@ -44,7 +44,7 @@ export class HabitatsService {
       order: { nombre: 'ASC' }, // Ordenar por nombre
     });
 
-    if (!habitats) {
+    if (!habitats.length) {
       throw new NotFoundException('No se encontraron habitats');
     }
 

@@ -1,9 +1,11 @@
 import { 
     Entity, Column, PrimaryColumn, 
     CreateDateColumn, 
-    ManyToOne, JoinColumn 
+    ManyToOne, JoinColumn, 
+    OneToMany
 } from 'typeorm';
 import { Cargo } from '../../cargos/entities/cargo.entity';
+import { DetalleEmpleado } from 'src/detalle-empleado/entities/detalle-empleado.entity';
 
 @Entity({ name: 'Empleado' })
 export class Empleado {
@@ -50,4 +52,8 @@ export class Empleado {
 
     @Column({ name: 'EstadoEmpleado', type: 'bit', default: true })
     estadoEmpleado: boolean;
+
+    // Tabla de detalle empleado
+    @OneToMany(()=>DetalleEmpleado, (detalleEmpleado)=>detalleEmpleado.codigEmpleado, {eager: true})
+    detalleEmpleado: DetalleEmpleado[];
 }

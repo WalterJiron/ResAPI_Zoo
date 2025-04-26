@@ -35,7 +35,7 @@ export class CargosService {
   async findAll() {
     const cargos = await this.cargoRepository.find();
 
-    if (!cargos) {
+    if (!cargos.length) {
       throw new NotFoundException('No hay cargos disponobles.');
     }
 
@@ -46,7 +46,7 @@ export class CargosService {
     const cargo = await this.cargoRepository.findOne({ where: { codifoCargo: id } })
 
     if (!cargo) {
-      throw new NotFoundException(`El codigo: ${id} no le pertenece a ningun cargo.`);
+      throw new BadRequestException(`El codigo: ${id} no le pertenece a ningun cargo.`);
     }
 
     return cargo

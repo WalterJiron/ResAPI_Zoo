@@ -38,7 +38,7 @@ export class EspecieService {
   async findAll() {
     const especies = await this.especieRepository.find();
 
-    if (!especies) {
+    if (!especies.length) {
       throw new NotFoundException('No hay especies disponibles.');
     }
 

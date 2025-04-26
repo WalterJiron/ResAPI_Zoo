@@ -34,7 +34,7 @@ export class ZonasService {
   async findAll() {
     const zonas = await this.zonaRepository.find();
 
-    if (!zonas) {
+    if (!zonas.length) {
       throw new NotFoundException('No hay zonas disponobles.');
     }
 

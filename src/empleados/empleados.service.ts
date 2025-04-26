@@ -49,7 +49,7 @@ export class EmpleadosService {
   async findAll() {
     const empleados = await this.empleadoRepository.find();
 
-    if (!empleados) {
+    if (!empleados.length) {
       throw new NotFoundException('No hay empleados en la base de datos.');
     }
 
