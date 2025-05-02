@@ -5,7 +5,6 @@ import { UpdateItinerarioZonaDto } from './dto/update-itinerario-zona.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { DeleteRestoreItinerarioZonaDto } from './dto/delete-restore-itinerario-zona-dto';
-import { ItinerarioZona } from './entities/itinerario-zona.entity';
 
 @Auth(Role.Admin)
 @Controller('itinerario-zona')

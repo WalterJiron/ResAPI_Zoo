@@ -4,15 +4,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from 'src/auth/enums/role.enum';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { User } from './entities/user.entity';
 
 @Auth(Role.Admin)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
-  
+
   @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<{message: string}> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<{ message: string }> {
     return this.usersService.create(createUserDto);
   }
 
@@ -21,28 +20,28 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
-  
+
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<{message: string}> {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<{ message: string }> {
     return this.usersService.update(id, updateUserDto);
   }
 
-  
+
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{message: string}> {
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
     return this.usersService.remove(id);
   }
 
-  
-  @Put('/activate/:id')  
-  async activate(@Param('id') id: string): Promise<{message: string}> {
+
+  @Put('/activate/:id')
+  async activate(@Param('id') id: string): Promise<{ message: string }> {
     return this.usersService.restore(id);
   }
-  
+
 }

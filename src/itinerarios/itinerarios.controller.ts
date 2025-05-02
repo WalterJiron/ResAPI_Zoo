@@ -4,7 +4,6 @@ import { CreateItinerarioDto } from './dto/create-itinerario.dto';
 import { UpdateItinerarioDto } from './dto/update-itinerario.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/auth/enums/role.enum';
-import { Itinerario } from './entities/itinerario.entity';
 
 @Auth(Role.Admin)
 @Controller('itinerarios')

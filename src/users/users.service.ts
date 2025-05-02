@@ -19,7 +19,7 @@ export class UsersService {
     const result = await this.userRepository.query(
       `DECLARE @Mensaje AS VARCHAR(100);
 
-        EXEC ProcInsertUser 
+        EXEC ProcInsertUser
           @NameUser = @0, 
           @Email = @1, 
           @Clave = @2, 
@@ -62,6 +62,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<{ message: string }> {
+
     const result = await this.userRepository.query(`
       DECLARE @Mensaje VARCHAR(100);
 
@@ -115,5 +116,5 @@ export class UsersService {
 
     return ValidationService.verifiedResult(result, 'correctamente');
   }
-  
+
 }

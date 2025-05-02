@@ -5,7 +5,6 @@ import { UpdateGuiaItinerarioDto } from './dto/update-guia-itinerario.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { DeleteRestoreGuiaItinerarioDto } from './dto/delete-restore-guia-itinerario-dto';
-import { GuiaItinerario } from './entities/guia-itinerario.entity';
 
 @Auth(Role.Admin)
 @Controller('guia-itinerario')

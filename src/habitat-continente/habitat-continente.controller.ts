@@ -5,7 +5,6 @@ import { UpdateHabitatContinenteDto } from './dto/update-habitat-continente.dto'
 import { Auth } from '../auth/decorators/auth.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { DeleteRestoreHabitadContinenteDto } from './dto/delete-restore-habitad-continente-dto';
-import { HabitatContinente } from './entities/habitat-continente.entity';
 
 @Auth(Role.Admin)
 @Controller('habitat-continente')

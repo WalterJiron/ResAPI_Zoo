@@ -5,7 +5,7 @@ import { UpdateEspecieHabitatDto } from './dto/update-especie-habitat.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { Role } from '../auth/enums/role.enum';
 import { DeleteRestoreEspecieHabitatDto } from './dto/delete-restore-especie-habitad-dto';
-import { EspecieHabitat } from './entities/especie-habitat.entity';
+
 
 @Auth(Role.Admin)
 @Controller('especi-habitat')
