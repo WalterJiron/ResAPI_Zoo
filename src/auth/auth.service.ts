@@ -18,12 +18,12 @@ export class AuthService {
     const result = await this.userRepository.query(`
       DECLARE @Mensaje VARCHAR(100);
       EXEC sp_VerificarUsuario 
-        @Email = '${email}', 
-        @Clave = '${password}', 
+        @Email = @0, 
+        @Clave = @1, 
         @Mensaje = @Mensaje OUTPUT;
 
       SELECT @Mensaje AS mensaje;
-    `);
+    `, [email, password]);
 
     const mensaje = result[0]?.mensaje;
 
@@ -38,8 +38,8 @@ export class AuthService {
     const user = await this.userRepository.query(`
       SELECT CodigoUser AS codigo, NameUser AS nombre, rol  
       FROM Users 
-      WHERE Email = '${email}';
-    `);
+      WHERE Email = @0;
+    `, [email]);
 
     const payload = { email: email, rol: user[0]?.rol, };
 

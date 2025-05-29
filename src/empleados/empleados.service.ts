@@ -25,8 +25,8 @@ export class EmpleadosService {
               @DIREMPLEADO = @4,
               @TELEFONO = @5,
               @EMAIL = @6,
-              @FECHAINGRE @7,
-              @IdCargo @8,
+              @FECHAINGRE = @7,
+              @IdCargo = @8,
               @MENSAJE = @Mensaje OUTPUT,
               @CodigoEmpleado = @CodigoEmpleado OUTPUT;
 
@@ -79,8 +79,8 @@ export class EmpleadosService {
               @DIREMPLEADO = @5,
               @TELEFONO = @6,
               @EMAIL = @7,
-              @FECHAINGRE @8,
-              @IdCargo @9,
+              @FECHAINGRE = @8,
+              @IdCargo = @9,
               @MENSAJE = @Mensaje OUTPUT;
 
             SELECT @Mensaje AS message;

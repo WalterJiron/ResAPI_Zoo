@@ -18,7 +18,7 @@ export class HabitatContinente {
     @JoinColumn({ name: 'Cont' })
     continente: Continente;
 
-    @Column({ name: 'DateCreate', type: 'datetime' })
+    @Column({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
     @Column({ name: 'EstadoHC', type: 'bit', default: true })

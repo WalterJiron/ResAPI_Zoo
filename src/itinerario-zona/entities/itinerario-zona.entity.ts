@@ -18,7 +18,7 @@ export class ItinerarioZona {
     @JoinColumn({ name: 'Zona' })
     zona: Zona;
 
-    @Column({ name: 'DateCreate', type: 'datetime' })
+    @Column({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
     @Column({ name: 'EstadoItZo', type: 'bit', default: true })

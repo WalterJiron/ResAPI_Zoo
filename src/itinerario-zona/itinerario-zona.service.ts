@@ -11,22 +11,22 @@ import { DeleteRestoreItinerarioZonaDto } from './dto/delete-restore-itinerario-
 export class ItinerarioZonaService {
   constructor(
     @InjectRepository(ItinerarioZona)
-      private readonly createItinerarioZonaRepository: Repository<ItinerarioZona>, ){ }
+    private readonly createItinerarioZonaRepository: Repository<ItinerarioZona>,) { }
 
-  async create(createItinerarioZonaDto: CreateItinerarioZonaDto): Promise<{message: string}> {
+  async create(createItinerarioZonaDto: CreateItinerarioZonaDto): Promise<{ message: string }> {
     const itinerarioZona = await this.createItinerarioZonaRepository.query(`
               DECLARE @Mensaje AS  NVARCHAR(100);
 
               EXEC INSERTAR_ITINERARIO_ZONA
                 @IdItinerario = @0,
-                @IDzona =@1,
-                @MENSAJE =@Mensaje OUTPUT;
+                @IDzona = @1,
+                @MENSAJE = @Mensaje OUTPUT;
 
               SELECT @Mensaje as message;
-      `,[
-        createItinerarioZonaDto.itinerarioId,
-        createItinerarioZonaDto.zonaId,
-      ]);
+      `, [
+      createItinerarioZonaDto.itinerarioId,
+      createItinerarioZonaDto.zonaId,
+    ]);
 
     return ValidationService.verifiedResult(itinerarioZona, 'realizada');
   }
@@ -34,23 +34,23 @@ export class ItinerarioZonaService {
   async findAll() {
     const ItinerarioZonas = await this.createItinerarioZonaRepository.find();
 
-    if(!ItinerarioZonas.length){
+    if (!ItinerarioZonas.length) {
       throw new NotFoundException('No se encontraron relaciones');
-    } 
+    }
     return ItinerarioZonas;
   }
 
   async findOne(id: string) {
-    const ItinerarioZona =await this.createItinerarioZonaRepository.findOne({where:{itinerarioId : id}});
-    
-    if(!ItinerarioZona){
+    const ItinerarioZona = await this.createItinerarioZonaRepository.findOne({ where: { itinerarioId: id } });
+
+    if (!ItinerarioZona) {
       throw new BadRequestException(`No se encontro la relacion con el id ${id}`);
     }
 
     return ItinerarioZona;
   }
 
-  async update(updateItinerarioZonaDto: UpdateItinerarioZonaDto): Promise<{message: string}> {
+  async update(updateItinerarioZonaDto: UpdateItinerarioZonaDto): Promise<{ message: string }> {
     const result = await this.createItinerarioZonaRepository.query(`
               DECLARE @MENSAJE AS NVARCHAR(100);
 
@@ -62,33 +62,34 @@ export class ItinerarioZonaService {
                   @MENSAJE = @MENSAJE OUTPUT;
 
               SELECT @MENSAJE AS message;
-      `,[
-        updateItinerarioZonaDto.itinerarioId,
-        updateItinerarioZonaDto.zonaId,
-        updateItinerarioZonaDto.idItinerarioNuevo,
-        updateItinerarioZonaDto.idZonaNueva,
-      ]);
-    return  ValidationService.verifiedResult(result, 'realizada');
+      `, [
+      updateItinerarioZonaDto.itinerarioId,
+      updateItinerarioZonaDto.zonaId,
+      updateItinerarioZonaDto.idItinerarioNuevo,
+      updateItinerarioZonaDto.idZonaNueva,
+    ]);
+    return ValidationService.verifiedResult(result, 'realizada');
   }
 
-  async remove(deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{message: string}> {
+  async remove(deleteItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{ message: string }> {
     const result = await this.createItinerarioZonaRepository.query(`
               DECLARE @MENSAJE AS NVARCHAR(100);
 
               EXEC ELIMINAR_ITINERARIOZONA
                   @IdItinerario = @0,
-                  @IDzona =@1,
-                  @MENSAJE =@MENSAJE OUTPUT;
+                  @IDzona = @1,
+                  @MENSAJE = @MENSAJE OUTPUT;
 
               SELECT @MENSAJE AS message
-      `,[
-        deleteItinerarioZonaDto.idItinerario,
-        deleteItinerarioZonaDto.idZona,
-      ]);
+      `, [
+      deleteItinerarioZonaDto.idItinerario,
+      deleteItinerarioZonaDto.idZona,
+    ]);
+
     return ValidationService.verifiedResult(result, 'correctamente');
   }
 
-  async restore(restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{message: string}> {
+  async restore(restoreItinerarioZonaDto: DeleteRestoreItinerarioZonaDto): Promise<{ message: string }> {
     const result = await this.createItinerarioZonaRepository.query(`
               DECLARE @MENSAJE AS NVARCHAR(100);
 
@@ -98,11 +99,12 @@ export class ItinerarioZonaService {
                   @MENSAJE = @MENSAJE OUTPUT;
 
               SELECT @MENSAJE AS message;
-      `,[
-        restoreItinerarioZonaDto.idItinerario,
-        restoreItinerarioZonaDto.idZona,
-      ])
+      `, [
+      restoreItinerarioZonaDto.idItinerario,
+      restoreItinerarioZonaDto.idZona,
+    ]);
+
     return ValidationService.verifiedResult(result, 'correctamente');
   }
-  
+
 }

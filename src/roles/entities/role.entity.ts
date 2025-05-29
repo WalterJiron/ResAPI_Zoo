@@ -1,10 +1,10 @@
 // src/modules/roles/entities/rol.entity.ts
-import { 
-    Entity, 
-    PrimaryGeneratedColumn, 
-    Column, 
-    CreateDateColumn,  
-    OneToMany 
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    OneToMany
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
@@ -19,10 +19,13 @@ export class Rol {
     @Column({ name: 'DescripRol', type: 'nvarchar', length: 'max' })
     descripRol: string;
 
-    @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset', nullable: true })
+    dateUpdate: Date | null;
+
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoRol', type: 'bit', default: true })

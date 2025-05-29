@@ -7,7 +7,7 @@ export class CuidadorEspecie {
     @PrimaryColumn({ name: 'IdEmpleado', type: 'uniqueidentifier', nullable: false })
     idEmpleado: string;
 
-    @ManyToOne(() => Empleado, (empleado) => empleado.codigEmpleado, { eager: true }) 
+    @ManyToOne(() => Empleado, (empleado) => empleado.codigEmpleado, { eager: true })
     @JoinColumn({ name: 'IdEmpleado' })
     empleado: Empleado;
 
@@ -18,17 +18,16 @@ export class CuidadorEspecie {
     @JoinColumn({ name: 'IdEspecie' })
     especie: Especie;
 
-    @Column({ name:'FechaAsignacion', type: 'date', nullable: false })  
+    @Column({ name: 'FechaAsignacion', type: 'date', nullable: false })
     fechaAsignacion: Date;
 
     @CreateDateColumn({
         name: 'DateCreate',
-        type: 'datetime',
-        default: () => 'GETDATE()',
+        type: 'datetimeoffset',
     })
     dateCreate: Date;
 
-    @Column({ name:'EstadoCE', type: 'bit', default: true })
+    @Column({ name: 'EstadoCE', type: 'bit', default: true })
     estadoCE: boolean;
 
 }

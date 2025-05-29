@@ -26,10 +26,13 @@ export class Habitat {
     @JoinColumn({ name: 'CodigoZona' })
     zona: Zona;
 
-    @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @DeleteDateColumn({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset', nullable: true })
+    dateUpdate: Date | null;
+
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoHabitat', type: 'bit', default: true })

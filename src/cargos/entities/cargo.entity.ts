@@ -17,10 +17,13 @@ export class Cargo {
     @Column({ name: 'DescripCargo', type: 'nvarchar', length: 'max' })
     descripCargo: string;
 
-    @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @DeleteDateColumn({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset' })
+    dateUpdate: Date | null;
+
+    @DeleteDateColumn({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoCargo', type: 'bit', default: true })

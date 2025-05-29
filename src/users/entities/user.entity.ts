@@ -1,10 +1,10 @@
-import { 
-    Entity, 
-    PrimaryGeneratedColumn, 
-    Column, 
-    CreateDateColumn, 
-    ManyToOne, 
-    JoinColumn 
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    ManyToOne,
+    JoinColumn
 } from 'typeorm';
 import { Rol } from '../../roles/entities/role.entity';
 
@@ -26,10 +26,13 @@ export class User {
     @JoinColumn({ name: 'Rol' })
     rol: Rol;
 
-    @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset', nullable: true })
+    dateUpdate: Date | null;
+
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoUser', type: 'bit', default: true })

@@ -17,10 +17,13 @@ export class Zona {
     @Column({ name: 'Extension', type: 'decimal', precision: 10, scale: 2 })
     extension: number;
 
-    @CreateDateColumn({ name: 'DateCreate', type: 'datetime' })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset', nullable: true })
+    dateUpdate: Date | null;
+
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoZona', type: 'bit', default: true })

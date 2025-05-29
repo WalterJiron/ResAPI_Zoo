@@ -18,10 +18,10 @@ export class EspecieHabitat {
     @JoinColumn({ name: 'Habitat' })
     habitat: Habitat;
 
-    @Column({ name: 'DateCreate', type: 'datetime' })
+    @Column({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
-    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'EstadoEH', type: 'bit', default: true })

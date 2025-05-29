@@ -9,7 +9,8 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  //@Throttle({ default: { limit: 5, ttl: 60000 } }) 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @SkipThrottle()
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.login(loginDto);

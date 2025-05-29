@@ -64,8 +64,8 @@ export class EspecieService {
             EXEC ProcUpdateEspecie
                 @CodigoEspecie = @0,
                 @NuevoNombre = @1,
-                @NuevoCientifico @2,
-                @NuevaDescripcion @3,
+                @NuevoCientifico = @2,
+                @NuevaDescripcion = @3,
                 @Mensaje = @Mensaje OUTPUT;
 
             SELECT @Mensaje AS message;

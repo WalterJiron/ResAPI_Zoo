@@ -18,7 +18,7 @@ export class GuiaItinerario {
     @JoinColumn({ name: 'Itinerario' })
     itinerario: Itinerario;
 
-    @Column({ name: 'DateCreate', type: 'datetime' })
+    @Column({ name: 'DateCreate', type: 'datetimeoffset' })
     dateCreate: Date;
 
     @Column({ name: 'EstadoGI', type: 'bit', default: true })

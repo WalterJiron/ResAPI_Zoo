@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     UsersModule,
-    ConfigModule.forRoot({ isGlobal: true }), // para usar process.env en toda la app
+    ConfigModule.forRoot({ isGlobal: true }), // para cargar las variables de entorno
 
     JwtModule.registerAsync({
       global: true,
@@ -16,7 +16,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get('JWT_ACCESS_SECRET'),
-        signOptions: { expiresIn: configService.get('JWT_ACCESS_EXPIRES_IN') }, 
+        signOptions: { expiresIn: configService.get('JWT_ACCESS_EXPIRES_IN') },
       }),
     }),
   ],

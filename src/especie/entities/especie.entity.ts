@@ -4,8 +4,8 @@ import { Entity, Column, PrimaryColumn, CreateDateColumn, OneToMany } from 'type
 
 @Entity({ name: 'Especie' })
 export class Especie {
-    @PrimaryColumn({ 
-        name: 'CodigoEspecie', type: 'uniqueidentifier', default: () => 'NEWID()', 
+    @PrimaryColumn({
+        name: 'CodigoEspecie', type: 'uniqueidentifier', default: () => 'NEWID()',
         generated: 'uuid'
     })
     codigoEspecie: string;
@@ -21,14 +21,21 @@ export class Especie {
 
     @CreateDateColumn({
         name: 'DateCreate',
-        type: 'datetime',
-        default: () => 'GETDATE()'
+        type: 'datetimeoffset',
+        default: () => "SYSDATETIMEOFFSET() AT TIME ZONE 'Central America Standard Time'"
     })
     dateCreate: Date;
 
     @Column({
+        name: 'DateUpdate',
+        type: 'datetimeoffset',
+        nullable: true
+    })
+    dateUpdate: Date | null;
+
+    @Column({
         name: 'DateDelete',
-        type: 'datetime',
+        type: 'datetimeoffset',
         nullable: true
     })
     dateDelete: Date | null;

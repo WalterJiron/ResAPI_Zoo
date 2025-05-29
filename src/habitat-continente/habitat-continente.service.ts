@@ -14,28 +14,28 @@ export class HabitatContinenteService {
     private readonly habitatContinenteRepository: Repository<HabitatContinente>,
   ) { }
 
-  async create(createHabitadContinenteDto: CreateHabitatContinenteDto): Promise<{message: string}> {
+  async create(createHabitadContinenteDto: CreateHabitatContinenteDto): Promise<{ message: string }> {
     const result = await this.habitatContinenteRepository.query(`
               DECLARE @Mensaje as NVARCHAR(100);
 
               EXEC Insertar_HabitadContinente
                 @Habitad = @0,
                 @CONTINENTE = @1,
-                @MENSAJE =@Mensaje OUTPUT;
+                @MENSAJE = @Mensaje OUTPUT;
 
               SELECT @Mensaje as message;
-      `,[
-        createHabitadContinenteDto.habitatId,
-        createHabitadContinenteDto.continenteId,
-      ]);
+      `, [
+      createHabitadContinenteDto.habitatId,
+      createHabitadContinenteDto.continenteId,
+    ]);
 
-      return ValidationService.verifiedResult(result , 'exito');
+    return ValidationService.verifiedResult(result, 'exito');
   }
 
   async findAll() {
     const habitad_continentes = await this.habitatContinenteRepository.find();
 
-    if(!habitad_continentes.length){
+    if (!habitad_continentes.length) {
       throw new NotFoundException('No se encontro la relacion');
     }
 
@@ -43,9 +43,9 @@ export class HabitatContinenteService {
   }
 
   async findOne(id: string) {
-    const habitad_continente = await this.habitatContinenteRepository.findOne({where:{habitatId : id}});
+    const habitad_continente = await this.habitatContinenteRepository.findOne({ where: { habitatId: id } });
 
-    if(!habitad_continente){
+    if (!habitad_continente) {
       throw new BadRequestException('No se encontro la relacion con el id ${id}');
     }
     return habitad_continente;
@@ -56,24 +56,24 @@ export class HabitatContinenteService {
                 DECLARE @MENSAJE AS NVARCHAR(100);
 
                 EXEC  Update_HabitatContinente
-                      @Habitad =@0,
-                      @CONTINENTE =@1,
-                      @HabitadVieja =@2,
-                      @CONTINENTE_VIEJO =@3,
-                      @MENSAJE =@MENSAJE OUTPUT;
+                      @Habitad = @0,
+                      @CONTINENTE = @1,
+                      @HabitadVieja = @2,
+                      @CONTINENTE_VIEJO = @3,
+                      @MENSAJE = @MENSAJE OUTPUT;
 
                 SELECT @MENSAJE AS message;
-      `,[
-        updateHabitatContinenteDto.idHabitadNueva,
-        updateHabitatContinenteDto.idContinenteNuevo,
-        updateHabitatContinenteDto.habitatId,
-        updateHabitatContinenteDto.continenteId,
-      ]);
+      `, [
+      updateHabitatContinenteDto.idHabitadNueva,
+      updateHabitatContinenteDto.idContinenteNuevo,
+      updateHabitatContinenteDto.habitatId,
+      updateHabitatContinenteDto.continenteId,
+    ]);
 
     return ValidationService.verifiedResult(result, 'exito');
   }
 
-  async remove(deleteEspecieHabitatDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
+  async remove(deleteEspecieHabitatDto: DeleteRestoreHabitadContinenteDto): Promise<{ message: string }> {
     const result = await this.habitatContinenteRepository.query(`
               DECLARE @MENSAJE AS NVARCHAR(100);
 
@@ -83,15 +83,15 @@ export class HabitatContinenteService {
                     @MENSAJE = @MENSAJE OUTPUT;
 
               SELECT @MENSAJE AS message;
-      `,[
-        deleteEspecieHabitatDto.idHabitat,
-        deleteEspecieHabitatDto.idContinente,
-      ]);
+      `, [
+      deleteEspecieHabitatDto.idHabitat,
+      deleteEspecieHabitatDto.idContinente,
+    ]);
 
     return ValidationService.verifiedResult(result, 'desactivada');
   }
 
-  async restore(restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto): Promise<{message: string}> {
+  async restore(restoreHabitadContinenteDto: DeleteRestoreHabitadContinenteDto): Promise<{ message: string }> {
     const result = await this.habitatContinenteRepository.query(`
               DECLARE @MENSAJE AS NVARCHAR(100);
 
@@ -101,12 +101,12 @@ export class HabitatContinenteService {
                   @MENSAJE = @MENSAJE OUTPUT;
 
               SELECT @MENSAJE AS message;
-      `,[
-        restoreHabitadContinenteDto.idHabitat,
-        restoreHabitadContinenteDto.idContinente,
-      ]);
+      `, [
+      restoreHabitadContinenteDto.idHabitat,
+      restoreHabitadContinenteDto.idContinente,
+    ]);
 
     return ValidationService.verifiedResult(result, 'activada');
   }
-  
+
 }

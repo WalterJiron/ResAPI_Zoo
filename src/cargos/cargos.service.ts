@@ -64,10 +64,10 @@ export class CargosService {
 
             SELECT @Mensaje AS message
       `, [
-        id,
-        updateCargoDto.nombreCargo,
-        updateCargoDto.descripCargo
-      ]
+      id,
+      updateCargoDto.nombreCargo,
+      updateCargoDto.descripCargo
+    ]
     );
 
     return ValidationService.verifiedResult(result, 'exito');
@@ -77,7 +77,7 @@ export class CargosService {
     const result = await this.cargoRepository.query(`
             DECLARE @Mensaje AS VARCHAR(100);
 
-            EXEC UPDATE_CARGO
+            EXEC ELIMINAR_CARGO
               @CDC = @0,
               @MENSAJE = @Mensaje OUTPUT;
 

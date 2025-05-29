@@ -32,8 +32,7 @@ export class UsersService {
       createUserDto.email,
       createUserDto.password,
       createUserDto.rol,
-    ]
-    );
+    ]);
 
     return ValidationService.verifiedResult(result, 'correctamente');
   }
@@ -81,8 +80,7 @@ export class UsersService {
       updateUserDto.email,
       updateUserDto.password,
       updateUserDto.rol,
-    ]
-    );
+    ]);
 
     return ValidationService.verifiedResult(result, 'correctamente');
   }

@@ -30,7 +30,13 @@ export class Itinerario {
     @Column({ name: 'Hora', type: 'time' })
     horaInicio: string;
 
-    @Column({ name: 'DateDelete', type: 'datetime', nullable: true })
+    @CreateDateColumn({ name: 'DateCreate', type: 'datetimeoffset' })
+    dateCreate: Date;
+
+    @Column({ name: 'DateUpdate', type: 'datetimeoffset', nullable: true })
+    dateUpdate: Date | null;
+
+    @Column({ name: 'DateDelete', type: 'datetimeoffset', nullable: true })
     dateDelete: Date | null;
 
     @Column({ name: 'Estado', type: 'bit', default: true })
